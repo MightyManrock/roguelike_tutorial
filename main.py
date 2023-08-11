@@ -18,6 +18,8 @@ def main() -> None:
   room_max_size = 16
   room_min_size = 4
   max_rooms = 30
+  big_room_quotient = 6
+  small_room_quotient = 8
   
   max_monsters_per_room = 2
   max_items_per_room = 2
@@ -34,6 +36,8 @@ def main() -> None:
     max_rooms=max_rooms,
     room_min_size=room_min_size,
     room_max_size=room_max_size,
+    big_room_quotient=big_room_quotient,
+    small_room_quotient=small_room_quotient,
     map_width=map_width,
     map_height=map_height,
     max_monsters_per_room=max_monsters_per_room,
