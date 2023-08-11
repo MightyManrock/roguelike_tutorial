@@ -30,7 +30,8 @@ class Engine:
         try:
           entity.ai.perform()
         except exceptions.Impossible:
-          print(f"{entity.name} seems to have made a mistake...")
+          #print(f"{entity.name} seems to have made a mistake...")
+          pass
   
   def update_fov(self) -> None:
     self.game_map.visible[:] = compute_fov(
