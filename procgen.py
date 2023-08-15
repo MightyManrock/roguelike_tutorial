@@ -206,8 +206,6 @@ def generate_dungeon(
   dungeon = GameMap(engine, map_width, map_height, entities=[player])
 
   rooms: List[RectangularRoom] = []
-  
-  center_of_last_room = (0, 0)
 
   for r in range(max_rooms):
     room_width, room_height = randomize_room_size(rooms, room_min_size, room_max_size, small_room_quotient, big_room_quotient)
@@ -235,43 +233,39 @@ def generate_dungeon(
     if len(rooms) == 0:
       player.place(*new_room.center, dungeon)
     else:
-      if len(rooms) > 2:
-        for x, y in tunnel_between(rooms[-1].center, new_room.center):
-          dungeon.tiles[x, y] = tile_types.floor
-      else:
-        for x, y in tunnel_between((rooms[-1].center[0] + random.choice([1, -1]), rooms[-1].center[1] + random.choice([1, -1])), (new_room.center[0] + random.choice([1, -1]), new_room.center[1] + random.choice([1, -1]))):
-          dungeon.tiles[x, y] = tile_types.floor
-      center_of_last_room = new_room.center
+      for x, y in tunnel_between(rooms[-1].center, new_room.center):
+        dungeon.tiles[x, y] = tile_types.floor
     
     place_entities(rooms, new_room, dungeon, max_monsters_per_room, max_items_per_room, big_room_quotient, small_room_quotient)
 
-    #if len(rooms) == 0 and current_floor < 0:
-    #    dungeon.tiles[new_room.center] = tile_types.up_stairs
-    #    dungeon.upstairs_location = new_room.center
-    #elif len(rooms) == 0 and current_floor > 0:
-    #    dungeon.tiles[new_room.center] = tile_types.down_stairs
-    #    dungeon.downstairs_location = new_room.center
-
-    if current_floor <= 0:
-      dungeon.tiles[center_of_last_room] = tile_types.down_stairs
-      dungeon.downstairs_location = center_of_last_room
-    elif current_floor > 0:
-      dungeon.tiles[center_of_last_room] = tile_types.up_stairs
-      dungeon.upstairs_location = center_of_last_room
-      
     rooms.append(new_room)
 
-  if current_floor < 0:
-    dungeon.tiles[rooms[0].center] = tile_types.up_stairs
+  final_room = rooms[-1]
+  current_floor -= 20
+  
+  if current_floor == -20:
     dungeon.upstairs_location = rooms[0].center
-  elif current_floor > 0:
-    dungeon.tiles[rooms[0].center] = tile_types.down_stairs
+    dungeon.tiles[rooms[0].center] = tile_types.up_stairs
+  elif -20 < current_floor < 0:
+    dungeon.upstairs_location = rooms[0].center
+    dungeon.tiles[rooms[0].center] = tile_types.up_stairs
+    dungeon.downstairs_location = final_room.center
+    dungeon.tiles[final_room.center] = tile_types.down_stairs
+  elif current_floor == 20:
     dungeon.downstairs_location = rooms[0].center
+    dungeon.tiles[rooms[0].center] = tile_types.down_stairs
+  elif 20 > current_floor > 0:
+    dungeon.downstairs_location = rooms[0].center
+    dungeon.tiles[rooms[0].center] = tile_types.down_stairs
+    dungeon.upstairs_location = final_room.center
+    dungeon.tiles[final_room.center] = tile_types.up_stairs
   elif current_floor == 0:
     random_room_index = random.randint(1, len(rooms) - 1)
     random_upstairs_room = rooms[random_room_index]
     dungeon.tiles[random_upstairs_room.center] = tile_types.up_stairs
     dungeon.upstairs_location = random_upstairs_room.center
+    dungeon.downstairs_location = final_room.center
+    dungeon.tiles[final_room.center] = tile_types.down_stairs
 
   place_hallway_entities(rooms, dungeon)
   return dungeon

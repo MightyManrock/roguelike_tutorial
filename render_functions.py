@@ -41,7 +41,7 @@ def render_dungeon_level(
   console: Console, dungeon_level: int, location: Tuple[int, int]
 ) -> None:
   x, y = location
-  
+  dungeon_level -= 20
   console.print(x=x, y=y, string=f"Dungeon Level: {dungeon_level}")
 
 def render_names_at_mouse_location(

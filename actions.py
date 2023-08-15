@@ -72,12 +72,11 @@ class WaitAction(Action):
 class TakeStairsDownAction(Action):
   def perform(self) -> None:
     if (self.entity.x, self.entity.y) == self.engine.game_map.downstairs_location:
-      try:
-        if self.engine.game_world.saved_floors[self.engine.game_world.current_floor - 1]:
-          print(f"Detected {self.engine.game_world.saved_floors[self.engine.game_world.current_floor - 1]}\nin\n{self.engine.game_world.saved_floors}")
-          self.engine.game_map = self.engine.game_world.saved_floors[self.engine.game_world.current_floor - 1]
-          player.place(*self.engine.game_map.upstairs_location, self.engine.game_world.saved_floors[self.engine.game_world.current_floor - 1])
-      except:
+      if self.engine.game_world.saved_floors[self.engine.game_world.current_floor - 1]:
+        #print(f"Detected {self.engine.game_world.saved_floors[self.engine.game_world.current_floor - 1]}\nin\n{self.engine.game_world.saved_floors}")
+        self.engine.game_world.load_game_map(self.engine.game_world.current_floor - 1)
+        self.engine.player.place(*self.engine.game_map.upstairs_location, self.engine.game_map)
+      else:
         self.engine.game_world.generate_floor(floor_change=-1)
       self.engine.message_log.add_message(
         "You descend the staircase.", color.descend
@@ -88,12 +87,11 @@ class TakeStairsDownAction(Action):
 class TakeStairsUpAction(Action):
   def perform(self) -> None:
     if (self.entity.x, self.entity.y) == self.engine.game_map.upstairs_location:
-      try:
-        if self.engine.game_world.saved_floors[self.engine.game_world.current_floor + 1]:
-          print(f"Detected {self.engine.game_world.saved_floors[self.engine.game_world.current_floor + 1]}\nin\n{self.engine.game_world.saved_floors}")
-          self.engine.game_map = self.engine.game_world.saved_floors[self.engine.game_world.current_floor + 1]
-          player.place(*self.engine.game_map.downstairs_location, self.engine.game_world.saved_floors[self.engine.game_world.current_floor + 1])
-      except:
+      if self.engine.game_world.saved_floors[self.engine.game_world.current_floor + 1]:
+        #print(f"Detected {self.engine.game_world.saved_floors[self.engine.game_world.current_floor + 1]}\nin\n{self.engine.game_world.saved_floors}")
+        self.engine.game_world.load_game_map(self.engine.game_world.current_floor + 1)
+        self.engine.player.place(*self.engine.game_map.downstairs_location, self.engine.game_map)
+      else:
         self.engine.game_world.generate_floor(floor_change=1)
       self.engine.message_log.add_message(
         "You ascend the staircase.", color.ascend
