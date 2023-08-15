@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import os
+
 from typing import Callable, Optional, TYPE_CHECKING, Union
 import tcod
+from tcod import libtcodpy
 
 import actions
 from actions import (
@@ -59,6 +62,28 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
     
   def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
     raise SystemExit()
+
+class PopupMessage(BaseEventHandler):
+  def __init__(self, parent_handler: BaseEventHandler, text: str):
+    self.parent = parent_handler
+    self.text = text
+    
+  def on_render(self, console: tcod.console.Console) -> None:
+    self.parent.on_render(console)
+    console.rgb["fg"] //= 8
+    console.rgb["bg"] //= 8
+    
+    console.print(
+      console.width // 2,
+      console.height // 2,
+      self.text,
+      fg=color.white,
+      bg=color.black,
+      alignment=libtcodpy.CENTER
+    )
+    
+  def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[BaseEventHandler]:
+    return self.parent
 
 class EventHandler(BaseEventHandler):
   def __init__(self, engine: Engine):
@@ -312,10 +337,17 @@ class MainGameEventHandler(EventHandler):
     return action
 
 class GameOverEventHandler(EventHandler):
-      
+  def on_quit(self) -> None:
+    if os.path.exists("savegame.sav"):
+      os.remove("savegame.sav")
+    raise exceptions.QuitWithoutSaving()
+  
+  def ev_quit(self, event: tcod.event.Quit) -> None:
+    self.on_quit()
+  
   def ev_keydown(self, event: tcod.event.KeyDown) -> None:
     if event.sym == tcod.event.KeySym.ESCAPE:
-      raise SystemExit()
+      self.on_quit()
     
 CURSOR_Y_KEYS = {
   tcod.event.KeySym.UP: -1,
@@ -338,7 +370,7 @@ class HistoryViewer(EventHandler):
     log_console.draw_frame(0, 0, log_console.width, log_console.height)
     
     log_console.print_box(
-      0, 0, log_console.width, 1, "┤Message History├", alignment=tcod.libtcodpy.CENTER
+      0, 0, log_console.width, 1, "┤Message History├", alignment=libtcodpy.CENTER
     )
     
     self.engine.message_log.render_messages(
