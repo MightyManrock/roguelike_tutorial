@@ -1,50 +1,21 @@
 #!/usr/bin/env python3
-import copy
 import traceback
 import tcod
 
 import color
-from engine import Engine
-import entity_factories
 import exceptions
 import input_handlers
-from procgen import generate_dungeon
-from procgen_attributes import set_procgen_attributes
+import setup_game
 
 def main() -> None:
   screen_width = 80
   screen_height = 50
   
-  map_width, map_height, room_max_size, room_min_size, max_rooms, big_room_quotient, small_room_quotient, max_monsters_per_room, max_items_per_room = set_procgen_attributes()
-  
   tileset = tcod.tileset.load_tilesheet(
     "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
   )
   
-  player = copy.deepcopy(entity_factories.player)
-  
-  engine = Engine(player=player)
-  
-  engine.game_map = generate_dungeon(
-    max_rooms=max_rooms,
-    room_min_size=room_min_size,
-    room_max_size=room_max_size,
-    big_room_quotient=big_room_quotient,
-    small_room_quotient=small_room_quotient,
-    map_width=map_width,
-    map_height=map_height,
-    max_monsters_per_room=max_monsters_per_room,
-    max_items_per_room=max_items_per_room,
-    engine=engine
-  )
-  
-  engine.update_fov()
-  
-  engine.message_log.add_message(
-    "Hello and welcome, adventurer, to yet another dungeon!", color.welcome_text
-  )
-  
-  handler: input_handlers.BaseEventHandler = input_handlers.MainGameEventHandler(engine)
+  handler: input_handlers.BaseEventHandler = setup_game.MainMenu()
   
   with tcod.context.new_terminal(
     screen_width,
