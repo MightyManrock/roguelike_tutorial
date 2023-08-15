@@ -1,5 +1,6 @@
-#Cache
+#Cache/compiled
 __pycache__/
+*.pyc
 
 #VENV
 Include/
