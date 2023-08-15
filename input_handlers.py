@@ -313,6 +313,9 @@ class MainGameEventHandler(EventHandler):
 
     if key == tcod.event.KeySym.PERIOD and modifier & tcod.event.Modifier.SHIFT:
       return actions.TakeStairsDownAction(player)
+    
+    if key == tcod.event.KeySym.COMMA and modifier & tcod.event.Modifier.SHIFT:
+      return actions.TakeStairsUpAction(player)
 
     if key in MOVE_KEYS:
       dx, dy = MOVE_KEYS[key]

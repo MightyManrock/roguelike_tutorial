@@ -29,6 +29,7 @@ class GameMap:
     )
     
     self.downstairs_location = (0, 0)
+    self.upstairs_location = (0, 0)
   
   @property
   def game_map(self) -> GameMap:
@@ -118,6 +119,8 @@ class GameWorld:
     self.max_items_per_room = max_items_per_room
     
     self.current_floor = current_floor
+    
+    self.saved_floors: [GameMap] = []
   
   def generate_floor(self, floor_change: int = 0) -> None:
     from procgen import generate_dungeon
@@ -134,5 +137,9 @@ class GameWorld:
       map_height=self.map_height,
       max_monsters_per_room=self.max_monsters_per_room,
       max_items_per_room=self.max_items_per_room,
-      engine=self.engine
+      engine=self.engine,
+      current_floor=self.current_floor
     )
+    
+    self.saved_floors.insert(self.current_floor, self.engine.game_map)
+    print(f"{self.engine.game_map}\nsaved in\n{self.saved_floors}")
