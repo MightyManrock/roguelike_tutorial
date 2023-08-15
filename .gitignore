@@ -1,2 +1,11 @@
+#Cache
+__pycache__/
+
+#VENV
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+
 #Saved games
 *.sav
