@@ -125,10 +125,10 @@ class GameWorld:
   
   def generate_floor(self, floor_change: int = 0) -> None:
     from procgen import generate_dungeon
-    from procgen_attributes import randomize_procgen_attributes
-    
-    if self.current_floor != 20:
-      self.map_width, self.map_height, self.room_max_size, self.room_min_size, self.max_rooms, self.big_room_quotient, self.small_room_quotient, self.max_monsters_per_room, self.max_items_per_room = randomize_procgen_attributes(self.current_floor)
+    #from procgen_attributes import randomize_procgen_attributes
+        #
+    #if self.current_floor != 20:
+    #  self.map_width, self.map_height, self.room_max_size, self.room_min_size, self.max_rooms, self.big_room_quotient, self.small_room_quotient, self.max_monsters_per_room, self.max_items_per_room = randomize_procgen_attributes(self.current_floor)
     
     self.current_floor += floor_change
 
