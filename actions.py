@@ -69,6 +69,26 @@ class WaitAction(Action):
   def perform(self) -> None:
     pass
 
+class TakeStairsDownAction(Action):
+  def perform(self) -> None:
+    if (self.entity.x, self.entity.y) == self.engine.game_map.downstairs_location:
+      self.engine.game_world.generate_floor(floor_change=-1)
+      self.engine.message_log.add_message(
+        "You descend the staircase.", color.descend
+      )
+    else:
+      raise exceptions.Impossible("There are no stairs here.")
+      
+#class TakeStairsUpAction(Action):
+#  def perform(self) -> None:
+#    if (self.entity.x, self.entity.y) == self.engine.game_map.upstairs_location:
+#      self.engine.game_world.generate_floor(floor_change=1)
+#      self.engine.message_log.add_message(
+#        "You ascend the staircase.", color.ascend
+#      )
+#    else:
+#      raise exceptions.Impossible("There are no stairs here.")
+
 class ActionWithDirection(Action):
   def __init__(self, entity: Actor, dx: int = 0, dy: int = 0):
     super().__init__(entity)
