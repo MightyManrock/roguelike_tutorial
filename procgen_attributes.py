@@ -37,22 +37,22 @@ enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
 }
 
 item_chances: Dict[int, List[Tuple[Entity, int]]] = {
-  0: [(entity_factories.confusion_scroll, 10), (entity_factories.lightning_scroll, 25), (entity_factories.fireball_scroll, 25)],
+  0: [(entity_factories.confusion_scroll, 10), (entity_factories.lightning_scroll, 25), (entity_factories.fireball_scroll, 25), (entity_factories.dagger, 0), (entity_factories.leather_armor, 0), (entity_factories.sword, 5), (entity_factories.chainmail, 5)],
   1: [(entity_factories.health_potion, 5)],
   3: [(entity_factories.health_potion, 10)],
-  8: [(entity_factories.health_potion, 15)],
-  12: [(entity_factories.fireball_scroll, 10)],
-  14: [(entity_factories.health_potion, 35), (entity_factories.lightning_scroll, 10)],
-  17: [(entity_factories.fireball_scroll, 0)],
-  19: [(entity_factories.confusion_scroll, 0), (entity_factories.lightning_scroll, 0)],
-  21: [(entity_factories.confusion_scroll, 10)],
-  22: [(entity_factories.lightning_scroll, 10)],
+  8: [(entity_factories.health_potion, 15), (entity_factories.sword, 10), (entity_factories.chainmail, 10)],
+  12: [(entity_factories.fireball_scroll, 10), (entity_factories.dagger, 5), (entity_factories.leather_armor, 5)],
+  14: [(entity_factories.health_potion, 35), (entity_factories.lightning_scroll, 10), (entity_factories.sword, 25), (entity_factories.chainmail, 25)],
+  17: [(entity_factories.fireball_scroll, 0), (entity_factories.dagger, 10), (entity_factories.leather_armor, 10), (entity_factories.sword, 5), (entity_factories.chainmail, 5)],
+  19: [(entity_factories.confusion_scroll, 0), (entity_factories.lightning_scroll, 0), (entity_factories.dagger, 25), (entity_factories.leather_armor, 25), (entity_factories.sword, 0), (entity_factories.chainmail, 0)],
+  21: [(entity_factories.confusion_scroll, 10), (entity_factories.dagger, 10), (entity_factories.leather_armor, 10)],
+  22: [(entity_factories.lightning_scroll, 10), (entity_factories.sword, 10), (entity_factories.chainmail, 10)],
   23: [(entity_factories.fireball_scroll, 10)],
   25: [(entity_factories.lightning_scroll, 25)],
-  27: [(entity_factories.fireball_scroll, 25)],
-  28: [(entity_factories.health_potion, 15)],
-  32: [(entity_factories.health_potion, 10)],
-  37: [(entity_factories.health_potion, 5)],
+  27: [(entity_factories.fireball_scroll, 25), (entity_factories.dagger, 5), (entity_factories.leather_armor, 5)],
+  28: [(entity_factories.health_potion, 15), (entity_factories.sword, 25), (entity_factories.chainmail, 25)],
+  32: [(entity_factories.health_potion, 10), (entity_factories.sword, 10), (entity_factories.chainmail, 10)],
+  37: [(entity_factories.health_potion, 5), (entity_factories.dagger, 0), (entity_factories.leather_armor, 0), (entity_factories.sword, 5), (entity_factories.chainmail, 5)],
   39: [(entity_factories.health_potion, 0)]
 }
 
