@@ -10,4 +10,4 @@ Scripts/
 pyvenv.cfg
 
 #Saved games
-saves/
+saves/*.sav
