@@ -17,7 +17,7 @@ def main() -> None:
   screen_height = 50
   
   tileset = tcod.tileset.load_tilesheet(
-    "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+    "tilesets/dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
   )
   
   handler: input_handlers.BaseEventHandler = setup_game.MainMenu()
@@ -49,10 +49,10 @@ def main() -> None:
     except exceptions.QuitWithoutSaving:
       raise
     except SystemExit:
-      save_game(handler, "savegame.sav")
+      save_game(handler, "saves/savegame.sav")
       raise
     except BaseException:
-      save_game(handler, "savegame.sav")
+      save_game(handler, "saves/savegame.sav")
       raise
 
 if __name__ == "__main__":

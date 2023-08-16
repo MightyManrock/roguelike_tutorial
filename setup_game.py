@@ -17,7 +17,7 @@ import input_handlers
 from game_map import GameWorld
 from procgen_attributes import set_procgen_attributes
 
-background_image = iio.imread("menu_background.png")
+background_image = iio.imread("images/menu_background.png")
 
 def new_game() -> Engine:
   
@@ -94,7 +94,7 @@ class MainMenu(input_handlers.BaseEventHandler):
       raise SystemExit()
     elif event.sym == tcod.event.KeySym.c:
       try:
-        return input_handlers.MainGameEventHandler(load_game("savegame.sav"))
+        return input_handlers.MainGameEventHandler(load_game("saves/savegame.sav"))
       except FileNotFoundError:
         return input_handlers.PopupMessage(self, "No saved game to load.")
       except Exception as exc:
