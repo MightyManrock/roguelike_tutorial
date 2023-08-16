@@ -23,12 +23,12 @@ max_items_by_floor = [
 
 enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
   #Need more monsters for lower floors
-  #0: [(entity_factories.orc, 5), (entity_factories.troll), 5],
-  #9: [(entity_factories.troll, 60)],
+  0: [(entity_factories.orc, 5), (entity_factories.troll, 5)],
+  9: [(entity_factories.troll, 60)],
   11: [(entity_factories.orc, 80)],
-  #13: [(entity_factories.troll, 30)],
-  #15: [(entity_factories.troll, 15)],
-  #18: [(entity_factories.troll, 0)],
+  13: [(entity_factories.troll, 30)],
+  15: [(entity_factories.troll, 15)],
+  18: [(entity_factories.troll, 0)],
   21: [(entity_factories.troll, 15)],
   23: [(entity_factories.troll, 30)],
   25: [(entity_factories.troll, 60)],
@@ -91,7 +91,7 @@ def get_entities_at_random(
   chosen_entities = random.choices(
     entities, weights=entity_weighted_chance_values, k=number_of_entities
   )
-  print(chosen_entities)
+
   return chosen_entities
 
 def set_procgen_attributes():

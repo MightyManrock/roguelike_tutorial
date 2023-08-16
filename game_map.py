@@ -126,6 +126,7 @@ class GameWorld:
     #  self.map_width, self.map_height, self.room_max_size, self.room_min_size, self.max_rooms, self.big_room_quotient, self.small_room_quotient, self.max_monsters_per_room, self.max_items_per_room = randomize_procgen_attributes(self.current_floor)
     
     self.current_floor += floor_change
+    print(f"Generating floor {self.current_floor - 20}.")
 
     self.engine.game_map = generate_dungeon(
       max_rooms=self.max_rooms,
@@ -140,7 +141,6 @@ class GameWorld:
     )
     
     self.saved_floors[self.current_floor] = self.engine.game_map
-    #print(f"{self.engine.game_map}\nsaved in\n{self.saved_floors}")
     
   def load_game_map(self, ind_to_load: int) -> None:
     ind_to_load + 20
