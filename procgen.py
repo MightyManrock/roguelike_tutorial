@@ -73,7 +73,7 @@ def randomize_entity_numbers(
       number_of_monsters = random.randint(0, int(maximum_monsters * 2))
     number_of_items = random.randint(1, maximum_items)
   elif len(rooms) % small_room_quotient == 0:
-    number_of_monsters = random.randint(0, int(maximum_monsters) / 2)
+    number_of_monsters = random.randint(0, int(maximum_monsters / 2))
     number_of_items = random.randint(0, int(maximum_items / 2))
   else:
     number_of_monsters = random.randint(0, maximum_monsters)
@@ -87,89 +87,83 @@ def place_entities(
   rooms: List[RectangularRoom],
   room: RectangularRoom,
   dungeon: GameMap,
-  maximum_monsters: int,
-  maximum_items: int,
   big_room_quotient: int,
-  small_room_quotient: int
+  small_room_quotient: int,
+  current_floor: int
 ) -> None:
+  
+  import procgen_attributes as proca
+  
+  maximum_monsters = proca.get_max_value_for_floor(proca.max_monsters_by_floor, current_floor)
+  maximum_items = proca.get_max_value_for_floor(proca.max_items_by_floor, current_floor)
+  
   number_of_monsters, number_of_items = randomize_entity_numbers(rooms, maximum_monsters, maximum_items, big_room_quotient, small_room_quotient)
   
-  for i in range(number_of_monsters):
-    x = random.randint(room.x1 + 1, room.x2 - 1)
-    y = random.randint(room.y1 + 1, room.y2 - 1)
-    
-    if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
-      if random.random() < 0.8:
-        entity_factories.orc.spawn(dungeon, x, y)
-      else:
-        entity_factories.troll.spawn(dungeon, x, y)
+  monsters: List[Entity] = proca.get_entities_at_random(
+    proca.enemy_chances, number_of_monsters, current_floor
+  )
   
-  for i in range(number_of_items):
+  items: List[Entity] = proca.get_entities_at_random(
+    proca.item_chances, number_of_items, current_floor
+  )
+
+  for entity in monsters + items:
     x = random.randint(room.x1 + 1, room.x2 - 1)
     y = random.randint(room.y1 + 1, room.y2 - 1)
     if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
-      item_chance = random.random()
-      
-      if item_chance < 0.6:
-        entity_factories.health_potion.spawn(dungeon, x, y)
-      elif item_chance < 0.7:
-        entity_factories.fireball_scroll.spawn(dungeon, x, y)
-      elif item_chance < 0.9:
-        entity_factories.confusion_scroll.spawn(dungeon, x, y)
-      else:
-        entity_factories.lighting_scroll.spawn(dungeon, x, y)
+      entity.spawn(dungeon, x, y)
 
-def place_hallway_entities(
-  rooms: List[RectangularRoom], dungeon: GameMap
-) -> None:
-  number_of_hallway_monsters = random.randint(int(len(rooms) / 4), int(len(rooms) / 2) + 1)
-  number_of_hallway_items = random.randint(int(len(rooms) / 8), int(len(rooms) / 6) + 1)
-  
-  hallway_orcs = 0
-  hallway_trolls = 0
-  hallway_potions = 0
-  hallway_scrolls = 0
-  
-  for i in range(number_of_hallway_monsters):
-    x = random.randint(2, dungeon.width - 2)
-    y = random.randint(2, dungeon.height - 2)
-    
-    if not any(entity.x == x and entity.y == y for entity in dungeon.entities) and [x, y] not in [range(any(room.x2 - room.x1 for room in rooms)), range(any(room.y2 - room.y1 for room in rooms))] and dungeon.tiles[x, y] != tile_types.wall:
-      if random.random() < 0.8:
-        entity_factories.orc.spawn(dungeon, x, y)
-        hallway_orcs += 1
-      else:
-        entity_factories.troll.spawn(dungeon, x, y)
-        hallway_trolls += 1
-
-  for i in range(number_of_hallway_items):
-    x = random.randint(2, dungeon.width - 2)
-    y = random.randint(2, dungeon.height - 2)
-
-    if not any(entity.x == x and entity.y == y for entity in dungeon.entities) and [x, y] not in [range(any(room.x2 - room.x1 for room in rooms)), range(any(room.y2 - room.y1 for room in rooms))] and dungeon.tiles[x, y] != tile_types.wall:
-      item_chance = random.random()
-      
-      if item_chance < 0.6:
-        entity_factories.health_potion.spawn(dungeon, x, y)
-        hallway_potions += 1
-      elif item_chance < 0.7:
-        entity_factories.fireball_scroll.spawn(dungeon, x, y)
-        hallway_scrolls += 1
-      elif item_chance < 0.9:
-        entity_factories.confusion_scroll.spawn(dungeon, x, y)
-        hallway_scrolls += 1
-      else:
-        entity_factories.lighting_scroll.spawn(dungeon, x, y)
-        hallway_scrolls += 1
-
-  if hallway_orcs > 0:
-    print(f"{hallway_orcs} orcs spawned in hallways!")
-  if hallway_trolls > 0:
-    print(f"{hallway_trolls} trolls spawned in hallways!")
-  if hallway_potions > 0:
-    print(f"{hallway_potions} potions spawned in hallways!")
-  if hallway_scrolls > 0:
-    print(f"{hallway_scrolls} scrolls spawned in hallways!")
+#def place_hallway_entities(
+#  rooms: List[RectangularRoom], dungeon: GameMap
+#) -> None:
+#  number_of_hallway_monsters = random.randint(int(len(rooms) / 4), int(len(rooms) / 2) + 1)
+#  number_of_hallway_items = random.randint(int(len(rooms) / 8), int(len(rooms) / 6) + 1)
+#  
+#  hallway_orcs = 0
+#  hallway_trolls = 0
+#  hallway_potions = 0
+#  hallway_scrolls = 0
+#  
+#  for i in range(number_of_hallway_monsters):
+#    x = random.randint(2, dungeon.width - 2)
+#    y = random.randint(2, dungeon.height - 2)
+#    
+#    if not any(entity.x == x and entity.y == y for entity in dungeon.entities) and [x, y] not in [range(any(room.x2 - room.x1 for room in rooms)), range(any(room.y2 - room.y1 for room in rooms))] and dungeon.tiles[x, y] != tile_types.wall:
+#      if random.random() < 0.8:
+#        entity_factories.orc.spawn(dungeon, x, y)
+#        hallway_orcs += 1
+#      else:
+#        entity_factories.troll.spawn(dungeon, x, y)
+#        hallway_trolls += 1
+#
+#  for i in range(number_of_hallway_items):
+#    x = random.randint(2, dungeon.width - 2)
+#    y = random.randint(2, dungeon.height - 2)
+#
+#    if not any(entity.x == x and entity.y == y for entity in dungeon.entities) and [x, y] not in [range(any(room.x2 - room.x1 for room in rooms)), range(any(room.y2 - room.y1 for room in rooms))] and dungeon.tiles[x, y] != tile_types.wall:
+#      item_chance = random.random()
+#      
+#      if item_chance < 0.6:
+#        entity_factories.health_potion.spawn(dungeon, x, y)
+#        hallway_potions += 1
+#      elif item_chance < 0.7:
+#        entity_factories.fireball_scroll.spawn(dungeon, x, y)
+#        hallway_scrolls += 1
+#      elif item_chance < 0.9:
+#        entity_factories.confusion_scroll.spawn(dungeon, x, y)
+#        hallway_scrolls += 1
+#      else:
+#        entity_factories.lighting_scroll.spawn(dungeon, x, y)
+#        hallway_scrolls += 1
+#
+#  if hallway_orcs > 0:
+#    print(f"{hallway_orcs} orcs spawned in hallways!")
+#  if hallway_trolls > 0:
+#    print(f"{hallway_trolls} trolls spawned in hallways!")
+#  if hallway_potions > 0:
+#    print(f"{hallway_potions} potions spawned in hallways!")
+#  if hallway_scrolls > 0:
+#    print(f"{hallway_scrolls} scrolls spawned in hallways!")
 
 def randomize_room_size(
   rooms: List[RectangularRoom],
@@ -197,8 +191,6 @@ def generate_dungeon(
     small_room_quotient: int,
     map_width: int,
     map_height: int,
-    max_monsters_per_room: int,
-    max_items_per_room: int,
     engine: Engine,
     current_floor: int
 ) -> GameMap:
@@ -236,30 +228,29 @@ def generate_dungeon(
       for x, y in tunnel_between(rooms[-1].center, new_room.center):
         dungeon.tiles[x, y] = tile_types.floor
     
-    place_entities(rooms, new_room, dungeon, max_monsters_per_room, max_items_per_room, big_room_quotient, small_room_quotient)
+    place_entities(rooms, new_room, dungeon, big_room_quotient, small_room_quotient, current_floor)
 
     rooms.append(new_room)
 
   final_room = rooms[-1]
-  current_floor -= 20
   
-  if current_floor == -20:
+  if current_floor == 0:
     dungeon.upstairs_location = rooms[0].center
     dungeon.tiles[rooms[0].center] = tile_types.up_stairs
-  elif -20 < current_floor < 0:
+  elif 0 < current_floor < 20:
     dungeon.upstairs_location = rooms[0].center
     dungeon.tiles[rooms[0].center] = tile_types.up_stairs
     dungeon.downstairs_location = final_room.center
     dungeon.tiles[final_room.center] = tile_types.down_stairs
-  elif current_floor == 20:
+  elif current_floor == 40:
     dungeon.downstairs_location = rooms[0].center
     dungeon.tiles[rooms[0].center] = tile_types.down_stairs
-  elif 20 > current_floor > 0:
+  elif 40 > current_floor > 20:
     dungeon.downstairs_location = rooms[0].center
     dungeon.tiles[rooms[0].center] = tile_types.down_stairs
     dungeon.upstairs_location = final_room.center
     dungeon.tiles[final_room.center] = tile_types.up_stairs
-  elif current_floor == 0:
+  elif current_floor == 20:
     random_room_index = random.randint(1, len(rooms) - 1)
     random_upstairs_room = rooms[random_room_index]
     dungeon.tiles[random_upstairs_room.center] = tile_types.up_stairs
@@ -267,5 +258,5 @@ def generate_dungeon(
     dungeon.downstairs_location = final_room.center
     dungeon.tiles[final_room.center] = tile_types.down_stairs
 
-  place_hallway_entities(rooms, dungeon)
+  #place_hallway_entities(rooms, dungeon)
   return dungeon

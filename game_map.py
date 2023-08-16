@@ -98,8 +98,6 @@ class GameWorld:
     small_room_quotient: int,
     map_width: int,
     map_height: int,
-    max_monsters_per_room: int,
-    max_items_per_room: int,
     current_floor: int = 0
   ):
     self.engine = engine
@@ -114,9 +112,6 @@ class GameWorld:
     
     self.room_min_size = room_min_size
     self.room_max_size = room_max_size
-    
-    self.max_monsters_per_room = max_monsters_per_room
-    self.max_items_per_room = max_items_per_room
     
     self.current_floor = current_floor + 20
     
@@ -140,8 +135,6 @@ class GameWorld:
       small_room_quotient=self.small_room_quotient,
       map_width=self.map_width,
       map_height=self.map_height,
-      max_monsters_per_room=self.max_monsters_per_room,
-      max_items_per_room=self.max_items_per_room,
       engine=self.engine,
       current_floor=self.current_floor
     )

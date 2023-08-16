@@ -21,7 +21,7 @@ background_image = iio.imread("images/menu_background.png")
 
 def new_game() -> Engine:
   
-  map_width, map_height, room_max_size, room_min_size, max_rooms, big_room_quotient, small_room_quotient, max_monsters_per_room, max_items_per_room = set_procgen_attributes()
+  map_width, map_height, room_max_size, room_min_size, max_rooms, big_room_quotient, small_room_quotient = set_procgen_attributes()
   
   player = copy.deepcopy(entity_factories.player)
   
@@ -35,9 +35,7 @@ def new_game() -> Engine:
     big_room_quotient=big_room_quotient,
     small_room_quotient=small_room_quotient,
     map_width=map_width,
-    map_height=map_height,
-    max_monsters_per_room=max_monsters_per_room,
-    max_items_per_room=max_items_per_room
+    map_height=map_height
   )
   
   engine.game_world.generate_floor()

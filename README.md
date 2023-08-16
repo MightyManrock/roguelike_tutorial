@@ -8,7 +8,7 @@ The tutorial is [here](https://rogueliketutorials.com/tutorials/tcod/v2/).
 
 # Features So Far
 
-- All features up through part 11 of the tutorial.
+- All features up through part 12 of the tutorial.
 - Changes to reflect updates to TCOD library since the tutorial was first written.
 - Implementation of imageio library to replace soon-to-be-deprecated `tcod.image.load` function.
 - Additional logic to tweak procgen randomness.
@@ -19,7 +19,7 @@ The tutorial is [here](https://rogueliketutorials.com/tutorials/tcod/v2/).
 
 # TO-DO
 
-1. Complete [part 12](https://rogueliketutorials.com/tutorials/tcod/v2/part-12).
+1. Alter by-floor item and monster generation code to fit better with how the project differs from the tutorial.
 2. Complete [part 13](https://rogueliketutorials.com/tutorials/tcod/v2/part-13).
 3. Give the game a title other than the default tutorial name.
 4. Change menu screen art.

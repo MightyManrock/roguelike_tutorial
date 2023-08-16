@@ -71,6 +71,9 @@ class Entity:
     self.x += dx
     self.y += dy
     
+  def __repr__(self):
+    return self.name
+    
 class Actor(Entity):
   def __init__(
     self,
