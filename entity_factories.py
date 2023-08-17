@@ -12,7 +12,7 @@ player = Actor(
   name="Player",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=30, base_defense=1, base_power=2),
+  fighter=Fighter(hp=30, base_to_hit=0, base_defense=0, base_power=0, base_armor=0, base_dam_loc=3.0, base_dam_scale=1.0),
   inventory=Inventory(capacity=26),
   level=Level(level_up_base=200)
 )
@@ -22,7 +22,7 @@ kobold = Actor(
   name="Kobold",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=6, base_defense=0, base_power=3),
+  fighter=Fighter(hp=6, base_to_hit=0, base_defense=0, base_power=0, base_armor=0, base_dam_loc=3.0, base_dam_scale=1.0),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=20)
 )
@@ -32,7 +32,7 @@ orc = Actor(
   name="Orc",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=10, base_defense=1, base_power=4),
+  fighter=Fighter(hp=10, base_to_hit=1, base_defense=1, base_power=1, base_armor=1, base_dam_loc=4.0, base_dam_scale=2.0),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=35)
 )
@@ -42,7 +42,7 @@ troll = Actor(
   name="Troll",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=16, base_defense=2, base_power=5),
+  fighter=Fighter(hp=16, base_to_hit=2, base_defense=-2, base_power=3, base_armor=2, base_dam_loc=5.0, base_dam_scale=3.0),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=100)
 )

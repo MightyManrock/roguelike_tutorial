@@ -11,11 +11,15 @@ class Fighter(BaseComponent):
   
   parent: Actor
   
-  def __init__(self, hp: int, base_defense: int, base_power: int):
+  def __init__(self, hp: int, base_to_hit: int, base_defense: int, base_power: int, base_armor: int, base_dam_loc: float, base_dam_scale: float):
     self.max_hp = hp
     self._hp = hp
+    self.base_to_hit = base_to_hit
     self.base_defense = base_defense
     self.base_power = base_power
+    self.base_armor = base_armor
+    self.base_dam_loc = base_dam_loc
+    self.base_dam_scale = base_dam_scale
     
   @property
   def hp(self) -> int:
@@ -26,14 +30,43 @@ class Fighter(BaseComponent):
     self._hp = max(0, min(value, self.max_hp))
     if self._hp == 0 and self.parent.ai:
       self.die()
+
+  @property
+  def to_hit(self) -> int:
+    return self.base_to_hit + self.to_hit_bonus
   
   @property
   def defense(self) -> int:
-    return self.base_defense + self.defense_bonus
+    return 10 + self.base_defense + self.defense_bonus
     
   @property
   def power(self) -> int:
     return self.base_power + self.power_bonus
+    
+  @property
+  def armor(self) -> int:
+    return self.base_armor + self.armor_bonus
+  
+  @property
+  def dam_loc(self) -> float:
+    if self.parent.equipment:
+      return self.parent.equipment.dam_loc
+    else:
+      return base_dam_loc
+  
+  @property
+  def dam_scale(self) -> float:
+    if self.parent.equipment:
+      return self.parent.equipment.dam_scale
+    else:
+      return base_dam_scale
+  
+  @property
+  def to_hit_bonus(self) -> int:
+    if self.parent.equipment:
+      return self.parent.equipment.to_hit_bonus
+    else:
+      return 0
   
   @property
   def defense_bonus(self) -> int:
@@ -46,6 +79,13 @@ class Fighter(BaseComponent):
   def power_bonus(self) -> int:
     if self.parent.equipment:
       return self.parent.equipment.power_bonus
+    else:
+      return 0
+      
+  @property
+  def armor_bonus(self) -> int:
+    if self.parent.equipment:
+      return self.parent.equipment.armor_bonus
     else:
       return 0
   

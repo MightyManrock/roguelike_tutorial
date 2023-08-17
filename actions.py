@@ -3,6 +3,7 @@ from typing import Optional, Tuple, TYPE_CHECKING
 
 import color
 import exceptions
+import dice_roller as droll
 
 if TYPE_CHECKING:
   from engine import Engine
@@ -135,28 +136,50 @@ class ActionWithDirection(Action):
     raise NotImplementedError()
 
 class MeleeAction(ActionWithDirection):
+
   def perform(self) -> None:
     target = self.target_actor
     if not target:
       raise exceptions.Impossible("Nothing to attack.")
-    
-    damage = self.entity.fighter.power - target.fighter.defense
-    
-    attack_desc = f"{self.entity.name.capitalize()} attacks {target.name}"
+
     if self.entity is self.engine.player:
       attack_color = color.player_atk
     else:
       attack_color = color.enemy_atk
-
-    if damage > 0:
+    
+    roll_to_hit = False
+    critical_hit = False
+    critical_miss = False
+    rand_roll, critical_hit, critical_miss = droll.to_hit_roll()
+    mod_roll = rand_roll + self.entity.fighter.to_hit
+    if mod_roll >= target.fighter.defense:
+      roll_to_hit = True
+    
+    if critical_miss or not roll_to_hit:
+      attack_desc = f"{self.entity.name.capitalize()} attacks {target.name} but misses ({mod_roll} vs. {target.fighter.defense})"
+      if critical_miss:
+        attack_desc += " critically!"
+      else:
+        attack_desc += "."
       self.engine.message_log.add_message(
-        f"{attack_desc} for {damage} hit points.", attack_color
+        attack_desc, attack_color
       )
-      target.fighter.hp -= damage
     else:
-      self.engine.message_log.add_message(
-        f"{attack_desc} but does not damage.", attack_color
-      )
+      attack_desc = f"{self.entity.name.capitalize()} hits {target.name} ({mod_roll} vs. {target.fighter.defense})"
+      if critical_hit:
+        attack_desc += " and hits critically!"
+      damage = droll.damage_roll(self.entity.fighter.power, self.entity.fighter.dam_loc, self.entity.fighter.dam_scale, critical_hit)
+      damage -= target.fighter.armor
+
+      if damage > 0:
+        self.engine.message_log.add_message(
+          f"{attack_desc} for {damage} hit points.", attack_color
+        )
+        target.fighter.hp -= damage
+      else:
+        self.engine.message_log.add_message(
+          f"{attack_desc} but does no damage.", attack_color
+        )
 
 class MovementAction(ActionWithDirection):
   def perform(self) -> None:

@@ -16,6 +16,30 @@ class Equipment(BaseComponent):
     self.armor = armor
   
   @property
+  def to_hit_bonus(self) -> int:
+    bonus = 0
+    
+    if self.weapon is not None and self.weapon.equippable is not None:
+      bonus += self.weapon.equippable.to_hit_bonus
+    
+    if self.armor is not None and self.armor.equippable is not None:
+      bonus += self.armor.equippable.to_hit_bonus
+    
+    return bonus
+  
+  @property
+  def armor_bonus(self) -> int:
+    bonus = 0
+    
+    if self.weapon is not None and self.weapon.equippable is not None:
+      bonus += self.weapon.equippable.armor_bonus
+    
+    if self.armor is not None and self.armor.equippable is not None:
+      bonus += self.armor.equippable.armor_bonus
+    
+    return bonus
+  
+  @property
   def defense_bonus(self) -> int:
     bonus = 0
     
@@ -38,6 +62,20 @@ class Equipment(BaseComponent):
       bonus += self.armor.equippable.power_bonus
     
     return bonus
+  
+  @property
+  def dam_loc(self) -> float:
+    if self.weapon is not None and self.weapon.equippable is not None:
+      return self.weapon.equippable.dam_loc
+    else:
+      return 2.0
+  
+  @property
+  def dam_scale(self) -> float:
+    if self.weapon is not None and self.weapon.equippable is not None:
+      return self.weapon.equippable.dam_scale
+    else:
+      return 1.0
   
   def item_is_equipped(self, item: Item) -> bool:
     return self.weapon == item or self.armor == item

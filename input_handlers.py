@@ -263,7 +263,7 @@ class CharacterScreenEventHandler(AskUserEventHandler):
       x=x,
       y=y,
       width=width,
-      height=7,
+      height=9,
       title=self.TITLE,
       clear=True,
       fg=(255, 255, 255),
@@ -279,23 +279,41 @@ class CharacterScreenEventHandler(AskUserEventHandler):
     console.print(
       x=x+1, y=y+3, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
     )
-    if self.engine.player.fighter.power_bonus != 0:
-      power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
+    if self.engine.player.fighter.to_hit_bonus != 0:
+      to_hit_bonus_string = f"(+{self.engine.player.fighter.to_hit_bonus})"
       console.print(
-        x=x+1, y=y+4, string=f"Attack: {self.engine.player.fighter.base_power}" + power_bonus_string
+        x=x+1, y=y+4, string=f"Prowess: {self.engine.player.fighter.base_to_hit}" + to_hit_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+4, string=f"Attack: {self.engine.player.fighter.base_power}"
+        x=x+1, y=y+4, string=f"Prowess: {self.engine.player.fighter.base_to_hit}"
+      )
+    if self.engine.player.fighter.power_bonus != 0:
+      power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
+      console.print(
+        x=x+1, y=y+5, string=f"Power: {self.engine.player.fighter.base_power}" + power_bonus_string
+      )
+    else:
+      console.print(
+        x=x+1, y=y+5, string=f"Power: {self.engine.player.fighter.base_power}"
       )
     if self.engine.player.fighter.defense_bonus != 0:
       defense_bonus_string = f"(+{self.engine.player.fighter.defense_bonus})"
       console.print(
-        x=x+1, y=y+5, string=f"Defense: {self.engine.player.fighter.base_defense}" + defense_bonus_string
+        x=x+1, y=y+6, string=f"Defense: {10 + self.engine.player.fighter.base_defense}" + defense_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+5, string=f"Defense: {self.engine.player.fighter.base_defense}"
+        x=x+1, y=y+6, string=f"Defense: {10 + self.engine.player.fighter.base_defense}"
+      )
+    if self.engine.player.fighter.armor_bonus != 0:
+      armor_bonus_string = f"(+{self.engine.player.fighter.armor_bonus})"
+      console.print(
+        x=x+1, y=y+7, string=f"Armor: {self.engine.player.fighter.base_armor}" + armor_bonus_string
+      )
+    else:
+      console.print(
+        x=x+1, y=y+7, string=f"Armor: {self.engine.player.fighter.base_armor}"
       )
 
 class LevelUpEventHandler(AskUserEventHandler):
@@ -312,8 +330,8 @@ class LevelUpEventHandler(AskUserEventHandler):
     console.draw_frame(
       x=x,
       y=0,
-      width=35,
-      height=8,
+      width=37,
+      height=9,
       title=self.TITLE,
       clear=True,
       fg=(255, 255, 255),
@@ -326,17 +344,22 @@ class LevelUpEventHandler(AskUserEventHandler):
     console.print(
       x=x+1,
       y=4,
-      string=f"a) Constitution: +20 HP, from {self.engine.player.fighter.max_hp}"
+      string=f"a) Constitution: +10 HP, from {self.engine.player.fighter.max_hp}"
     )
     console.print(
       x=x+1,
       y=5,
-      string=f"b) Strength: +1 attack, from {self.engine.player.fighter.base_power}(+{self.engine.player.fighter.power_bonus})"
+      string=f"b) Prowess: +1 attack, from {self.engine.player.fighter.base_to_hit}(+{self.engine.player.fighter.to_hit_bonus})"
     )
     console.print(
       x=x+1,
       y=6,
-      string=f"c) Agility: +1 defense, from {self.engine.player.fighter.base_defense}(+{self.engine.player.fighter.defense_bonus})"
+      string=f"c) Power: +1 damage, from {self.engine.player.fighter.base_power}(+{self.engine.player.fighter.power_bonus})"
+    )
+    console.print(
+      x=x+1,
+      y=7,
+      string=f"d) Agility: +1 defense, from {self.engine.player.fighter.base_defense}(+{self.engine.player.fighter.defense_bonus})"
     )
 
   def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
@@ -348,6 +371,8 @@ class LevelUpEventHandler(AskUserEventHandler):
       if index == 0:
         player.level.increase_max_hp()
       elif index == 1:
+        player.level.increase_to_hit()
+      elif index == 2:
         player.level.increase_power()
       else:
         player.level.increase_defense()

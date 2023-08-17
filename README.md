@@ -17,6 +17,30 @@ The tutorial is [here](https://rogueliketutorials.com/tutorials/tcod/v2/).
 - Character level displayed in UI panel.
 - Probably some stuff I forgot.
 
+# Features In Progress
+
+## Changes to Combat
+
+Currently, the game follows the tutorial's combat engine:
+   
+   - entities deal HP damage based on their power stat (with an inherent `base_power` augmented by a `power_bonus` from equipment);
+   - entities soak damage based on their defense stat (with an inherent `base_defense` augmented by a `defense_bonus` from equipment).
+
+The combat redesign will achieve the following:
+   
+   - combat will involve a random roll to hit, and on a successful hit, damage will be randomized within a small range;
+   - entities will have an inherent `base_to_hit` stat, which the player can level up and which increases the likelihood of success on the random roll to hit;
+   - entities will have an inherent `base_power` stat (which the player *cannot* level up) that will influence the randomly rolled damage;
+   - entities will have an inherent `base_defense` stat, which the player can level up and which decreases the likelihood of an attack roll succeeding on them;
+   - entities will have an inherent `base_armor` stat (which the player *cannot* level up) that will reduce the damage taken from damage rolls.
+
+Equipment will function as follows:
+   
+   - armor will provide an `armor_bonus` to soak damage;
+   - weapons will each have a `damage_calculation` function for determining random damage;
+   - monsters will either have equipment themselves or have an inherent `damage_calculation` function for their attacks;
+   - either type of equipment may provide additional benefits, such as a `to_hit_bonus` or `defense_bonus`.
+
 # TO-DO
 
 1. Give the game a title other than the default tutorial name.
