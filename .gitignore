@@ -12,3 +12,6 @@ pyvenv.cfg
 
 #Saved games
 saves/*.sav
+
+#Testing
+testing_ground.py
