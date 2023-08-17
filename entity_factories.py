@@ -16,14 +16,23 @@ player = Actor(
   inventory=Inventory(capacity=26),
   level=Level(level_up_base=200)
 )
-
+kobold = Actor(
+  char="k",
+  color=(75, 127, 63),
+  name="Kobold",
+  ai_cls=HostileEnemy,
+  equipment=Equipment(),
+  fighter=Fighter(hp=6, base_defense=0, base_power=3),
+  inventory=Inventory(capacity=0),
+  level=Level(xp_given=20)
+)
 orc = Actor(
   char="o",
   color=(63, 127, 63),
   name="Orc",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=10, base_defense=0, base_power=3),
+  fighter=Fighter(hp=10, base_defense=1, base_power=4),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=35)
 )
@@ -33,7 +42,7 @@ troll = Actor(
   name="Troll",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=16, base_defense=1, base_power=4),
+  fighter=Fighter(hp=16, base_defense=2, base_power=5),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=100)
 )
@@ -63,6 +72,12 @@ lightning_scroll = Item(
   consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5)
 )
 
+club = Item(
+  char="/",
+  color=(139, 69, 19),
+  name="Club",
+  equippable=equippable.Club()
+)
 dagger = Item(
   char="/",
   color=(0, 191, 255),
@@ -76,6 +91,12 @@ sword = Item(
   equippable=equippable.Sword()
 )
 
+padded_armor = Item(
+  char="[",
+  color=(159, 89, 39),
+  name="Padded Armor",
+  equippable=equippable.PaddedArmor()
+)
 leather_armor = Item(
   char="[",
   color=(139, 69, 19),

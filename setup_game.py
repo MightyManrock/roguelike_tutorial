@@ -44,6 +44,19 @@ def new_game() -> Engine:
   engine.message_log.add_message(
     "Hello and welcome, adventurer, to yet another dungeon!", color.welcome_text
   )
+  
+  club = copy.deepcopy(entity_factories.club)
+  padded_armor = copy.deepcopy(entity_factories.padded_armor)
+  
+  club.parent = player.inventory
+  padded_armor.parent = player.inventory
+  
+  player.inventory.items.append(club)
+  player.equipment.toggle_equip(club, add_message=False)
+  
+  player.inventory.items.append(padded_armor)
+  player.equipment.toggle_equip(padded_armor, add_message=False)
+  
   return engine
 
 def load_game(filename: str) -> Engine:

@@ -263,7 +263,7 @@ class CharacterScreenEventHandler(AskUserEventHandler):
       x=x,
       y=y,
       width=width,
-      height=8,
+      height=7,
       title=self.TITLE,
       clear=True,
       fg=(255, 255, 255),
@@ -274,31 +274,28 @@ class CharacterScreenEventHandler(AskUserEventHandler):
       x=x+1, y=y+1, string=f"Level: {self.engine.player.level.current_level}"
     )
     console.print(
-      x=x+1, y=y+2, string=f"XP: {self.engine.player.level.current_xp}"
+      x=x+1, y=y+2, string=f"XP: {self.engine.player.level.current_xp}/{self.engine.player.level.experience_to_next_level}"
     )
     console.print(
-      x=x+1, y=y+3, string=f"XP to Next: {self.engine.player.level.experience_to_next_level}"
-    )
-    console.print(
-      x=x+1, y=y+4, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
+      x=x+1, y=y+3, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
     )
     if self.engine.player.fighter.power_bonus != 0:
       power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
       console.print(
-        x=x+1, y=y+5, string=f"Attack: {self.engine.player.fighter.base_power}" + power_bonus_string
+        x=x+1, y=y+4, string=f"Attack: {self.engine.player.fighter.base_power}" + power_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+5, string=f"Attack: {self.engine.player.fighter.base_power}"
+        x=x+1, y=y+4, string=f"Attack: {self.engine.player.fighter.base_power}"
       )
     if self.engine.player.fighter.defense_bonus != 0:
       defense_bonus_string = f"(+{self.engine.player.fighter.defense_bonus})"
       console.print(
-        x=x+1, y=y+6, string=f"Defense: {self.engine.player.fighter.base_defense}" + defense_bonus_string
+        x=x+1, y=y+5, string=f"Defense: {self.engine.player.fighter.base_defense}" + defense_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+6, string=f"Defense: {self.engine.player.fighter.base_defense}"
+        x=x+1, y=y+5, string=f"Defense: {self.engine.player.fighter.base_defense}"
       )
 
 class LevelUpEventHandler(AskUserEventHandler):
@@ -329,17 +326,17 @@ class LevelUpEventHandler(AskUserEventHandler):
     console.print(
       x=x+1,
       y=4,
-      string=f"a) Constitution (+20 HP, from {self.engine.player.fighter.max_hp})"
+      string=f"a) Constitution: +20 HP, from {self.engine.player.fighter.max_hp}"
     )
     console.print(
       x=x+1,
       y=5,
-      string=f"b) Strength (+1 attack, from {self.engine.player.fighter.power})"
+      string=f"b) Strength: +1 attack, from {self.engine.player.fighter.base_power}(+{self.engine.player.fighter.power_bonus})"
     )
     console.print(
       x=x+1,
       y=6,
-      string=f"c) Agility (+1 defense, from {self.engine.player.fighter.defense})"
+      string=f"c) Agility: +1 defense, from {self.engine.player.fighter.base_defense}(+{self.engine.player.fighter.defense_bonus})"
     )
 
   def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:

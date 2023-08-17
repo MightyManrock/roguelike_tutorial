@@ -23,16 +23,22 @@ max_items_by_floor = [
 
 enemy_chances: Dict[int, List[Tuple[Entity, int]]] = {
   #Need more monsters for lower floors
-  0: [(entity_factories.orc, 5), (entity_factories.troll, 5)],
-  9: [(entity_factories.troll, 60)],
-  11: [(entity_factories.orc, 80)],
+  0: [(entity_factories.kobold, 0), (entity_factories.orc, 0), (entity_factories.troll, 0)],
+  9: [(entity_factories.troll, 5)],
+  11: [(entity_factories.troll, 60)],
   13: [(entity_factories.troll, 30)],
+  14: [(entity_factories.orc, 80)],
   15: [(entity_factories.troll, 15)],
-  18: [(entity_factories.troll, 0)],
-  21: [(entity_factories.troll, 15)],
-  23: [(entity_factories.troll, 30)],
+  17: [(entity_factories.troll, 0)],
+  18: [(entity_factories.orc, 30), (entity_factories.kobold, 50)],
+  20: [(entity_factories.orc, 0), (entity_factories.kobold, 80)],
+  21: [(entity_factories.orc, 30), (entity_factories.kobold, 50)],
+  22: [(entity_factories.orc, 80), (entity_factories.kobold, 0)],
+  23: [(entity_factories.troll, 15)],
+  24: [(entity_factories.troll, 30)],
   25: [(entity_factories.troll, 60)],
-  28: [(entity_factories.orc, 5)]
+  29: [(entity_factories.orc, 0)],
+  31: [(entity_factories.troll, 5)]
   #Need more monsters for higher floors
 }
 

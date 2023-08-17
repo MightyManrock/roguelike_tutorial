@@ -1,6 +1,7 @@
 #Cache/compiled
 __pycache__/
 components/__pycache__/
+builds/
 *.pyc
 
 #VENV
