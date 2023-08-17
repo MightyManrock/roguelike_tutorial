@@ -279,23 +279,31 @@ class CharacterScreenEventHandler(AskUserEventHandler):
     console.print(
       x=x+1, y=y+3, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
     )
+    if self.engine.player.fighter.base_to_hit >= 0:
+      to_hit_string = f"+{self.engine.player.fighter.base_to_hit}"
+    else:
+      to_hit_string = f"{self.engine.player.fighter.base_to_hit}"
     if self.engine.player.fighter.to_hit_bonus != 0:
       to_hit_bonus_string = f"(+{self.engine.player.fighter.to_hit_bonus})"
       console.print(
-        x=x+1, y=y+4, string=f"Prowess: {self.engine.player.fighter.base_to_hit}" + to_hit_bonus_string
+        x=x+1, y=y+4, string="Prowess: " + to_hit_string + to_hit_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+4, string=f"Prowess: {self.engine.player.fighter.base_to_hit}"
+        x=x+1, y=y+4, string="Prowess: " + to_hit_string
       )
+    if self.engine.player.fighter.base_power >= 0:
+      power_string = f"+{self.engine.player.fighter.base_power}"
+    else:
+      power_string = f"{self.engine.player.fighter.base_power}"
     if self.engine.player.fighter.power_bonus != 0:
       power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
       console.print(
-        x=x+1, y=y+5, string=f"Power: {self.engine.player.fighter.base_power}" + power_bonus_string
+        x=x+1, y=y+5, string="Power: " + power_string + power_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+5, string=f"Power: {self.engine.player.fighter.base_power}"
+        x=x+1, y=y+5, string="Power: " + power_string
       )
     if self.engine.player.fighter.defense_bonus != 0:
       defense_bonus_string = f"(+{self.engine.player.fighter.defense_bonus})"
@@ -306,14 +314,18 @@ class CharacterScreenEventHandler(AskUserEventHandler):
       console.print(
         x=x+1, y=y+6, string=f"Defense: {10 + self.engine.player.fighter.base_defense}"
       )
+    if self.engine.player.fighter.base_armor >= 0:
+      armor_string = f"+{self.engine.player.fighter.base_armor}"
+    else:
+      armor_string = f"{self.engine.player.fighter.base_armor}"
     if self.engine.player.fighter.armor_bonus != 0:
       armor_bonus_string = f"(+{self.engine.player.fighter.armor_bonus})"
       console.print(
-        x=x+1, y=y+7, string=f"Armor: {self.engine.player.fighter.base_armor}" + armor_bonus_string
+        x=x+1, y=y+7, string="Armor: " + armor_string + armor_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+7, string=f"Armor: {self.engine.player.fighter.base_armor}"
+        x=x+1, y=y+7, string="Armor: " + armor_string
       )
 
 class LevelUpEventHandler(AskUserEventHandler):
