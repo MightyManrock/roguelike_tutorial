@@ -256,57 +256,86 @@ class CharacterScreenEventHandler(AskUserEventHandler):
       x = 0
     
     y = 0
-    
     width = len(self.TITLE) + 10
     
     console.draw_frame(
       x=x,
       y=y,
       width=width,
-      height=9,
+      height=12,
       title=self.TITLE,
       clear=True,
       fg=(255, 255, 255),
       bg=(0, 0, 0)
     )
     
+    y_plus = y + 1
     console.print(
-      x=x+1, y=y+1, string=f"Level: {self.engine.player.level.current_level}"
+      x=x+1, y=y_plus, string=f"Level: {self.engine.player.level.current_level}"
     )
+    y_plus += 1
     console.print(
-      x=x+1, y=y+2, string=f"XP: {self.engine.player.level.current_xp}/{self.engine.player.level.experience_to_next_level}"
+      x=x+1, y=y_plus, string=f"XP: {self.engine.player.level.current_xp}/{self.engine.player.level.experience_to_next_level}"
     )
+    y_plus += 1
     console.print(
-      x=x+1, y=y+3, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
+      x=x+1, y=y_plus, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
     )
+    y_plus += 1
     if self.engine.player.fighter.base_power >= 0:
       power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]+{self.engine.player.fighter.base_power}"
     else:
       power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]{self.engine.player.fighter.base_power}"
     if self.engine.player.fighter.power_bonus != 0:
       power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
+      power_string += power_bonus_string
+    console.print(
+      x=x+1, y=y_plus, string="Power: " + power_string
+    )
+    y_plus += 1
+    if self.engine.player.fighter.damage_type:
       console.print(
-        x=x+1, y=y+4, string="Power: " + power_string + power_bonus_string
+        x=x+1, y=y_plus, string=(" " * (15 - len(self.engine.player.fighter.damage_type))) + f"- {self.engine.player.fighter.damage_type}"
       )
-    else:
-      console.print(
-        x=x+1, y=y+4, string="Power: " + power_string
-      )
+      y_plus += 1
     if self.engine.player.fighter.base_armor >= 0:
       armor_string = f"+{self.engine.player.fighter.base_armor}"
     else:
       armor_string = f"{self.engine.player.fighter.base_armor}"
     if self.engine.player.fighter.armor_bonus != 0:
       armor_bonus_string = f"(+{self.engine.player.fighter.armor_bonus})"
+      armor_string += armor_bonus_string
+    console.print(
+      x=x+1, y=y_plus, string="Armor: " + armor_string
+    )
+    if self.engine.player.fighter.dam_absorb:
+      y_plus += 1
+      absorb_string = ", ".join(self.engine.player.fighter.dam_absorb)
+      absorb_string = ". absorbs " + absorb_string
       console.print(
-        x=x+1, y=y+5, string="Armor: " + armor_string + armor_bonus_string
+        x=x+1, y=y_plus, string=absorb_string
       )
-    else:
+    if self.engine.player.fighter.dam_immune:
+      y_plus += 1
+      immune_string = ", ".join(self.engine.player.fighter.dam_immune)
+      immune_string = ". immune to " + immune_string
       console.print(
-        x=x+1, y=y+5, string="Armor: " + armor_string
+        x=x+1, y=y_plus, string=immune_string
       )
-    # Add code to display damage resistances, etc.
-    
+    if self.engine.player.fighter.dam_vulnerable:
+      y_plus += 1
+      vulnerable_string = ", ".join(self.engine.player.fighter.dam_vulnerable)
+      vulnerable_string = ". weak to " + vulnerable_string
+      console.print(
+        x=x+1, y=y_plus, string=vulnerable_string
+      )
+    if self.engine.player.fighter.dam_resist:
+      y_plus += 1
+      resist_string = ", ".join(self.engine.player.fighter.dam_resist)
+      resist_string = ". resists " + resist_string
+      console.print(
+        x=x+1, y=y_plus, string=resist_string
+      )
 
 class LevelUpEventHandler(AskUserEventHandler):
   TITLE = "Level Up"

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import List, Set, TYPE_CHECKING
 import color
 from components.base_component import BaseComponent
 from render_order import RenderOrder
@@ -11,7 +11,7 @@ class Fighter(BaseComponent):
   
   parent: Actor
   
-  def __init__(self, hp: int, base_power: int, base_armor: int, min_dam: int, max_dam: int, damage_type: str = "bludgeoning", dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = ["healing"], dam_vulnerable: List[str] = [""]):
+  def __init__(self, hp: int, base_power: int, base_armor: int, min_dam: int, max_dam: int, damage_type: str = "bludgeoning", dam_resist: Set = set(), dam_immune: Set = set(), dam_absorb: Set = set(["healing"]), dam_vulnerable: Set = set()):
     self.max_hp = hp
     self._hp = hp
     self.base_power = base_power
@@ -78,28 +78,28 @@ class Fighter(BaseComponent):
       return self.base_damage_type
   
   @property
-  def dam_resist(self) -> List[str]:
-    if self.parent.equipment:
-      self.base_dam_resist.extend(self.parent.equipment.dam_resist)
-    return [x for x in self.base_dam_resist if x]
+  def dam_resist(self) -> Set:
+    if self.parent.equipment and self.parent.equipment.dam_resist:
+      self.base_dam_resist.union(self.parent.equipment.dam_resist)
+    return self.base_dam_resist
 
   @property
-  def dam_immune(self) -> List[str]:
-    if self.parent.equipment:
-      self.base_dam_immune.extend(self.parent.equipment.dam_immune)
-    return [x for x in self.base_dam_immune if x]
+  def dam_immune(self) -> Set:
+    if self.parent.equipment and self.parent.equipment.dam_immune:
+      self.base_dam_immune.union(self.parent.equipment.dam_immune)
+    return self.base_dam_immune
   
   @property
-  def dam_absorb(self) -> List[str]:
-    if self.parent.equipment:
-      self.base_dam_absorb.extend(self.parent.equipment.dam_absorb)
-    return [x for x in self.base_dam_absorb if x]
+  def dam_absorb(self) -> Set:
+    if self.parent.equipment and self.parent.equipment.dam_absorb:
+      self.base_dam_absorb.union(self.parent.equipment.dam_absorb)
+    return self.base_dam_absorb
 
   @property
-  def dam_vulnerable(self) -> List[str]:
-    if self.parent.equipment:
-      self.base_dam_vulnerable.extend(self.parent.equipment.dam_vulnerable)
-    return [x for x in self.base_dam_vulnerable if x]
+  def dam_vulnerable(self) -> Set:
+    if self.parent.equipment and self.parent.equipment.dam_vulnerable:
+      self.base_dam_vulnerable.union(self.parent.equipment.dam_vulnerable)
+    return self.base_dam_vulnerable
   
   #def heal(self, amount: int) -> int:
   #  if self.hp == self.max_hp:

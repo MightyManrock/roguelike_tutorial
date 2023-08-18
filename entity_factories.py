@@ -105,7 +105,7 @@ leather_armor = Item(
 )
 chainmail = Item(
   char="[",
-  color=(139, 69, 19),
+  color=(142, 191, 255),
   name="Chainmail",
   equippable=equippable.ChainMail()
 )
