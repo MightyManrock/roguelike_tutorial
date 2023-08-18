@@ -118,18 +118,6 @@ class Fighter(BaseComponent):
 
   def take_damage(self, amount: int, damage_type: str = "") -> int:
     final_amount = amount
-    if damage_type in self.dam_resist:
-      print("Damage resisted!")
-      if final_amount / 2 < 1:
-        final_amount = 0
-      else:
-        final_amount = int(final_amount / 2)
-    elif damage_type in self.dam_vulnerable:
-      print("Damage triggered weakness!")
-      if final_amount == 0:
-        final_amount = 2
-      else:
-        final_amount = final_amount * 2
     if damage_type in self.dam_absorb:
       print("Damage absorbed!")
       if final_amount + self.hp > self.max_hp:
@@ -139,6 +127,18 @@ class Fighter(BaseComponent):
     elif damage_type in self.dam_immune:
       print("Immune to damage!")
       final_amount = 0
+    elif damage_type in self.dam_vulnerable:
+      print("Damage triggered weakness!")
+      if final_amount == 0:
+        final_amount = 2
+      else:
+        final_amount = final_amount * 2
+    elif damage_type in self.dam_resist:
+      print("Damage resisted!")
+      if final_amount / 2 < 1:
+        final_amount = 0
+      else:
+        final_amount = int(final_amount / 2)
     self.hp -= final_amount
     return final_amount
 
