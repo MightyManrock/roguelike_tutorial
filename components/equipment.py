@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from components.base_component import BaseComponent
 from equipment_types import EquipmentType
@@ -16,18 +16,6 @@ class Equipment(BaseComponent):
     self.armor = armor
   
   @property
-  def to_hit_bonus(self) -> int:
-    bonus = 0
-    
-    if self.weapon is not None and self.weapon.equippable is not None:
-      bonus += self.weapon.equippable.to_hit_bonus
-    
-    if self.armor is not None and self.armor.equippable is not None:
-      bonus += self.armor.equippable.to_hit_bonus
-    
-    return bonus
-  
-  @property
   def armor_bonus(self) -> int:
     bonus = 0
     
@@ -36,18 +24,6 @@ class Equipment(BaseComponent):
     
     if self.armor is not None and self.armor.equippable is not None:
       bonus += self.armor.equippable.armor_bonus
-    
-    return bonus
-  
-  @property
-  def defense_bonus(self) -> int:
-    bonus = 0
-    
-    if self.weapon is not None and self.weapon.equippable is not None:
-      bonus += self.weapon.equippable.defense_bonus
-    
-    if self.armor is not None and self.armor.equippable is not None:
-      bonus += self.armor.equippable.defense_bonus
     
     return bonus
     
@@ -76,6 +52,42 @@ class Equipment(BaseComponent):
       return self.weapon.equippable.max_dam
     else:
       return 3
+      
+  @property
+  def damage_type(self) -> str:
+    if self.weapon is not None and self.weapon.equippable is not None:
+      return self.weapon.equippable.damage_type
+    else:
+      return ""
+  
+  @property
+  def dam_resist(self) -> List[str]:
+    if self.armor is not None and self.armor.equippable is not None:
+      return self.armor.equippable.dam_resist
+    else:
+      return [""]
+  
+  @property
+  def dam_immune(self) -> List[str]:
+    if self.armor is not None and self.armor.equippable is not None:
+      return self.armor.equippable.dam_immune
+    else:
+      return [""]
+  
+  @property
+  def dam_absorb(self) -> List[str]:
+    if self.armor is not None and self.armor.equippable is not None:
+      return self.armor.equippable.dam_absorb
+    else:
+      return [""]
+  
+  @property
+  def dam_vulnerable(self) -> List[str]:
+    if self.armor is not None and self.armor.equippable is not None:
+      return self.armor.equippable.dam_vulnerable
+    else:
+      return [""]
+    
   
   def item_is_equipped(self, item: Item) -> bool:
     return self.weapon == item or self.armor == item

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 import color
 from components.base_component import BaseComponent
 from render_order import RenderOrder
@@ -11,15 +11,18 @@ class Fighter(BaseComponent):
   
   parent: Actor
   
-  def __init__(self, hp: int, base_to_hit: int, base_defense: int, base_power: int, base_armor: int, min_dam: int, max_dam: int):
+  def __init__(self, hp: int, base_power: int, base_armor: int, min_dam: int, max_dam: int, damage_type: str = "bludgeoning", dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = ["healing"], dam_vulnerable: List[str] = [""]):
     self.max_hp = hp
     self._hp = hp
-    self.base_to_hit = base_to_hit
-    self.base_defense = base_defense
     self.base_power = base_power
     self.base_armor = base_armor
     self.base_min_dam = min_dam
     self.base_max_dam = max_dam
+    self.base_damage_type = damage_type
+    self.base_dam_resist = dam_resist
+    self.base_dam_immune = dam_immune
+    self.base_dam_absorb = dam_absorb
+    self.base_dam_vulnerable = dam_vulnerable
     
   @property
   def hp(self) -> int:
@@ -31,14 +34,6 @@ class Fighter(BaseComponent):
     if self._hp == 0 and self.parent.ai:
       self.die()
 
-  @property
-  def to_hit(self) -> int:
-    return self.base_to_hit + self.to_hit_bonus
-  
-  @property
-  def defense(self) -> int:
-    return 10 + self.base_defense + self.defense_bonus
-    
   @property
   def power(self) -> int:
     return self.base_power + self.power_bonus
@@ -60,20 +55,6 @@ class Fighter(BaseComponent):
       return self.parent.equipment.max_dam
     else:
       return self.base_max_dam
-  
-  @property
-  def to_hit_bonus(self) -> int:
-    if self.parent.equipment:
-      return self.parent.equipment.to_hit_bonus
-    else:
-      return 0
-  
-  @property
-  def defense_bonus(self) -> int:
-    if self.parent.equipment:
-      return self.parent.equipment.defense_bonus
-    else:
-      return 0
     
   @property
   def power_bonus(self) -> int:
@@ -89,23 +70,77 @@ class Fighter(BaseComponent):
     else:
       return 0
   
-  def heal(self, amount: int) -> int:
-    if self.hp == self.max_hp:
-      return 0
-    
-    new_hp_value = self.hp + amount
-    
-    if new_hp_value > self.max_hp:
-      new_hp_value = self.max_hp
-      
-    amount_recovered = new_hp_value - self.hp
-    
-    self.hp = new_hp_value
-    
-    return amount_recovered
+  @property
+  def damage_type(self) -> str:
+    if self.parent.equipment:
+      return self.parent.equipment.damage_type
+    else:
+      return self.base_damage_type
+  
+  @property
+  def dam_resist(self) -> List[str]:
+    if self.parent.equipment:
+      self.base_dam_resist.extend(self.parent.equipment.dam_resist)
+    return [x for x in self.base_dam_resist if x]
 
-  def take_damage(self, amount: int) -> None:
-    self.hp -= amount
+  @property
+  def dam_immune(self) -> List[str]:
+    if self.parent.equipment:
+      self.base_dam_immune.extend(self.parent.equipment.dam_immune)
+    return [x for x in self.base_dam_immune if x]
+  
+  @property
+  def dam_absorb(self) -> List[str]:
+    if self.parent.equipment:
+      self.base_dam_absorb.extend(self.parent.equipment.dam_absorb)
+    return [x for x in self.base_dam_absorb if x]
+
+  @property
+  def dam_vulnerable(self) -> List[str]:
+    if self.parent.equipment:
+      self.base_dam_vulnerable.extend(self.parent.equipment.dam_vulnerable)
+    return [x for x in self.base_dam_vulnerable if x]
+  
+  #def heal(self, amount: int) -> int:
+  #  if self.hp == self.max_hp:
+  #    return 0
+    #  
+  #  new_hp_value = self.hp + amount
+    #  
+  #  if new_hp_value > self.max_hp:
+  #    new_hp_value = self.max_hp
+    #    
+  #  amount_recovered = new_hp_value - self.hp
+    #  
+  #  self.hp = new_hp_value
+    #  
+  #  return amount_recovered
+
+  def take_damage(self, amount: int, damage_type: str = "") -> int:
+    final_amount = amount
+    if damage_type in self.dam_resist:
+      print("Damage resisted!")
+      if final_amount / 2 < 1:
+        final_amount = 0
+      else:
+        final_amount = int(final_amount / 2)
+    elif damage_type in self.dam_vulnerable:
+      print("Damage triggered weakness!")
+      if final_amount == 0:
+        final_amount = 2
+      else:
+        final_amount = final_amount * 2
+    if damage_type in self.dam_absorb:
+      print("Damage absorbed!")
+      if final_amount + self.hp > self.max_hp:
+        final_amount = (self.max_hp - self.hp) * -1
+      else:
+        final_amount = final_amount * -1
+    elif damage_type in self.dam_immune:
+      print("Immune to damage!")
+      final_amount = 0
+    self.hp -= final_amount
+    return final_amount
 
   def die(self) -> None:
     if self.engine.player is self.parent:

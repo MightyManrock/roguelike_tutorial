@@ -148,45 +148,39 @@ class MeleeAction(ActionWithDirection):
     else:
       attack_color = color.enemy_atk
     
-    roll_to_hit = False
-    critical_hit = False
-    critical_miss = False
-    rand_roll, critical_hit, critical_miss = droll.to_hit_roll()
-    mod_roll = rand_roll + self.entity.fighter.to_hit
-    if mod_roll >= target.fighter.defense:
-      roll_to_hit = True
+    critical_hit, critical_miss = droll.crit_roll()
     
-    if critical_miss or not roll_to_hit:
-      attack_desc = f"{self.entity.name.capitalize()} attacks {target.name} but misses ({mod_roll} vs. {target.fighter.defense})"
-      if critical_miss:
-        attack_desc += " critically!"
+    if critical_miss:
+      attack_desc = f"{self.entity.name.capitalize()} attacks {target.name} but misses!"
       self.engine.message_log.add_message(
         attack_desc, attack_color
       )
     else:
-      attack_desc = f"{self.entity.name.capitalize()} hits {target.name} ({mod_roll} vs. {target.fighter.defense})"
+      attack_desc = f"{self.entity.name.capitalize()} hits {target.name} "
       if critical_hit:
-        attack_desc += " and hits critically"
+        attack_desc += " critically"
       damage = droll.damage_roll(self.entity.fighter.power, self.entity.fighter.min_dam, self.entity.fighter.max_dam, critical_hit)
-      damage -= target.fighter.armor
-      if damage <= 0 and random.random() >= 0.5:
+      if self.entity.fighter.damage_type not in target.fighter.dam_absorb:
+        damage -= target.fighter.armor
+      if damage < 0:
+        damage = 0
+      if damage == 0 and random.random() >= 0.5:
         damage = 1
-      
-      """
-      In the future, damage will only be guaranteed to be negated completely if the entity has
-      resistance to the kind of damage.
-      """
-      
       if damage > 0:
-        attack_desc += f" for {damage} hit points"
-        if critical_hit:
-          attack_desc += "!"
+        final_damage = target.fighter.take_damage(damage, damage_type=self.entity.fighter.damage_type)
+        if final_damage > 0:
+          attack_desc += f" for {final_damage} hit points"
+          if critical_hit:
+            attack_desc += "!"
+          else:
+            attack_desc += "."
+          self.engine.message_log.add_message(
+            attack_desc, attack_color
+          )
         else:
-          attack_desc += "."
-        self.engine.message_log.add_message(
-          attack_desc, attack_color
-        )
-        target.fighter.hp -= damage
+          self.engine.message_log.add_message(
+            f"{attack_desc} but does no damage.", attack_color
+          )
       else:
         self.engine.message_log.add_message(
           f"{attack_desc} but does no damage.", attack_color

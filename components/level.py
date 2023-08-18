@@ -54,13 +54,6 @@ class Level(BaseComponent):
     self.engine.message_log.add_message("Your HP increase!")
     
     self.increase_level()
-    
-  def increase_to_hit(self, amount: int = 1) -> None:
-    self.parent.fighter.base_to_hit += amount
-    
-    self.engine.message_log.add_message("You feel more disciplined!")
-    
-    self.increase_level()
   
   def increase_power(self, amount: int = 1) -> None:
     self.parent.fighter.base_power += amount

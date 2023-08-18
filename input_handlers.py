@@ -279,19 +279,6 @@ class CharacterScreenEventHandler(AskUserEventHandler):
     console.print(
       x=x+1, y=y+3, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
     )
-    if self.engine.player.fighter.base_to_hit >= 0:
-      to_hit_string = f"+{self.engine.player.fighter.base_to_hit}"
-    else:
-      to_hit_string = f"{self.engine.player.fighter.base_to_hit}"
-    if self.engine.player.fighter.to_hit_bonus != 0:
-      to_hit_bonus_string = f"(+{self.engine.player.fighter.to_hit_bonus})"
-      console.print(
-        x=x+1, y=y+4, string="Prowess: " + to_hit_string + to_hit_bonus_string
-      )
-    else:
-      console.print(
-        x=x+1, y=y+4, string="Prowess: " + to_hit_string
-      )
     if self.engine.player.fighter.base_power >= 0:
       power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]+{self.engine.player.fighter.base_power}"
     else:
@@ -299,20 +286,11 @@ class CharacterScreenEventHandler(AskUserEventHandler):
     if self.engine.player.fighter.power_bonus != 0:
       power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
       console.print(
-        x=x+1, y=y+5, string="Power: " + power_string + power_bonus_string
+        x=x+1, y=y+4, string="Power: " + power_string + power_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+5, string="Power: " + power_string
-      )
-    if self.engine.player.fighter.defense_bonus != 0:
-      defense_bonus_string = f"(+{self.engine.player.fighter.defense_bonus})"
-      console.print(
-        x=x+1, y=y+6, string=f"Defense: {10 + self.engine.player.fighter.base_defense}" + defense_bonus_string
-      )
-    else:
-      console.print(
-        x=x+1, y=y+6, string=f"Defense: {10 + self.engine.player.fighter.base_defense}"
+        x=x+1, y=y+4, string="Power: " + power_string
       )
     if self.engine.player.fighter.base_armor >= 0:
       armor_string = f"+{self.engine.player.fighter.base_armor}"
@@ -321,12 +299,14 @@ class CharacterScreenEventHandler(AskUserEventHandler):
     if self.engine.player.fighter.armor_bonus != 0:
       armor_bonus_string = f"(+{self.engine.player.fighter.armor_bonus})"
       console.print(
-        x=x+1, y=y+7, string="Armor: " + armor_string + armor_bonus_string
+        x=x+1, y=y+5, string="Armor: " + armor_string + armor_bonus_string
       )
     else:
       console.print(
-        x=x+1, y=y+7, string="Armor: " + armor_string
+        x=x+1, y=y+5, string="Armor: " + armor_string
       )
+    # Add code to display damage resistances, etc.
+    
 
 class LevelUpEventHandler(AskUserEventHandler):
   TITLE = "Level Up"
@@ -361,17 +341,7 @@ class LevelUpEventHandler(AskUserEventHandler):
     console.print(
       x=x+1,
       y=5,
-      string=f"b) Prowess: +1 attack, from {self.engine.player.fighter.base_to_hit}(+{self.engine.player.fighter.to_hit_bonus})"
-    )
-    console.print(
-      x=x+1,
-      y=6,
-      string=f"c) Power: +1 damage, from {self.engine.player.fighter.base_power}(+{self.engine.player.fighter.power_bonus})"
-    )
-    console.print(
-      x=x+1,
-      y=7,
-      string=f"d) Agility: +1 defense, from {10 + self.engine.player.fighter.base_defense}(+{self.engine.player.fighter.defense_bonus})"
+      string=f"b) Power: +1 damage, from {self.engine.player.fighter.base_power}(+{self.engine.player.fighter.power_bonus})"
     )
 
   def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
@@ -379,15 +349,11 @@ class LevelUpEventHandler(AskUserEventHandler):
     key = event.sym
     index = key - tcod.event.KeySym.a
     
-    if 0 <= index <= 2:
+    if 0 <= index <= 1:
       if index == 0:
         player.level.increase_max_hp()
-      elif index == 1:
-        player.level.increase_to_hit()
-      elif index == 2:
-        player.level.increase_power()
       else:
-        player.level.increase_defense()
+        player.level.increase_power()
     else:
       self.engine.message_log.add_message("Invalid entry.", color.invalid)
       return None
