@@ -293,9 +293,9 @@ class CharacterScreenEventHandler(AskUserEventHandler):
         x=x+1, y=y+4, string="Prowess: " + to_hit_string
       )
     if self.engine.player.fighter.base_power >= 0:
-      power_string = f"+{self.engine.player.fighter.base_power}"
+      power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]+{self.engine.player.fighter.base_power}"
     else:
-      power_string = f"{self.engine.player.fighter.base_power}"
+      power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]{self.engine.player.fighter.base_power}"
     if self.engine.player.fighter.power_bonus != 0:
       power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
       console.print(
@@ -371,7 +371,7 @@ class LevelUpEventHandler(AskUserEventHandler):
     console.print(
       x=x+1,
       y=7,
-      string=f"d) Agility: +1 defense, from {self.engine.player.fighter.base_defense}(+{self.engine.player.fighter.defense_bonus})"
+      string=f"d) Agility: +1 defense, from {10 + self.engine.player.fighter.base_defense}(+{self.engine.player.fighter.defense_bonus})"
     )
 
   def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:

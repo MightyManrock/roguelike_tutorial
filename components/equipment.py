@@ -64,18 +64,18 @@ class Equipment(BaseComponent):
     return bonus
   
   @property
-  def dam_loc(self) -> float:
+  def min_dam(self) -> int:
     if self.weapon is not None and self.weapon.equippable is not None:
-      return self.weapon.equippable.dam_loc
+      return self.weapon.equippable.min_dam
     else:
-      return 2.0
+      return 1
   
   @property
-  def dam_scale(self) -> float:
+  def max_dam(self) -> int:
     if self.weapon is not None and self.weapon.equippable is not None:
-      return self.weapon.equippable.dam_scale
+      return self.weapon.equippable.max_dam
     else:
-      return 1.0
+      return 3
   
   def item_is_equipped(self, item: Item) -> bool:
     return self.weapon == item or self.armor == item

@@ -11,15 +11,15 @@ class Fighter(BaseComponent):
   
   parent: Actor
   
-  def __init__(self, hp: int, base_to_hit: int, base_defense: int, base_power: int, base_armor: int, base_dam_loc: float, base_dam_scale: float):
+  def __init__(self, hp: int, base_to_hit: int, base_defense: int, base_power: int, base_armor: int, min_dam: int, max_dam: int):
     self.max_hp = hp
     self._hp = hp
     self.base_to_hit = base_to_hit
     self.base_defense = base_defense
     self.base_power = base_power
     self.base_armor = base_armor
-    self.base_dam_loc = base_dam_loc
-    self.base_dam_scale = base_dam_scale
+    self.base_min_dam = min_dam
+    self.base_max_dam = max_dam
     
   @property
   def hp(self) -> int:
@@ -48,18 +48,18 @@ class Fighter(BaseComponent):
     return self.base_armor + self.armor_bonus
   
   @property
-  def dam_loc(self) -> float:
+  def min_dam(self) -> int:
     if self.parent.equipment:
-      return self.parent.equipment.dam_loc
+      return self.parent.equipment.min_dam
     else:
-      return base_dam_loc
+      return self.base_min_dam
   
   @property
-  def dam_scale(self) -> float:
+  def max_dam(self) -> int:
     if self.parent.equipment:
-      return self.parent.equipment.dam_scale
+      return self.parent.equipment.max_dam
     else:
-      return base_dam_scale
+      return self.base_max_dam
   
   @property
   def to_hit_bonus(self) -> int:
