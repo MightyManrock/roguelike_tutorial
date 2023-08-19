@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class Room:
   
-  def intersects_other(self, other: Room) -> bool:
+  def intersects(self, other: Room) -> bool:
     return (
       self.x1 <= other.x2
       and self.x2 >= other.x1
@@ -48,64 +48,28 @@ class RectangularRoom(Room):
         expanded_inner.append((x, y))
     return expanded_inner
 
-  #def intersects_rectangular(self, other: RectangularRoom) -> bool:
-  #  return (
-  #    self.x1 <= other.x2
-  #    and self.x2 >= other.x1
-  #    and self.y1 <= other.y2
-  #    and self.y2 >= other.y1
-  #  )
-    #
-  #def intersects_circular(self, other: CircularRoom) -> bool:
-  #  return (
-  #    self.x1 < other.x2
-  #    and self.x2 > other.x1
-  #    and self.y1 < other.y2
-  #    and self.y2 > other.y1
-  #  )
-
-class CircularRoom(Room):
-  def __init__(self, x:int, y:int, diameter: int):
-    self.x1 = x
-    self.y1 = y
-    self.x2 = x + diameter
-    self.y2 = y + diameter
-  
-  @property
-  def center(self) -> Tuple[int, int]:
-    center_x = int((self.x1 + self.x2) / 2)
-    center_y = int((self.y1 + self.y2) / 2)
-    return center_x, center_y
-  
-  @property
-  def inner(self) -> List[Tuple[int, int]]:
-    inner_tiles = []
-    for x in range(self.x1, self.x2):
-      for y in range(self.y1, self.y2):
-        if (x, y) not in [(self.x1, self.y1), (self.x1, self.y2 - 1),
-          (self.x2 - 1, self.y1), (self.x2 - 1, self.y2 - 1),
-          (self.x1 + (self.x2 - self.x1) // 2, self.y1),
-          (self.x1 + (self.x2 - self.x1) // 2, self.y2 - 1),
-          (self.x1, self.y1 + (self.y2 - self.y1) // 2),
-          (self.x2 - 1, self.y1 + (self.y2 - self.y1) // 2)]:
-          inner_tiles.append((x, y))
-    return inner_tiles
-
-  #def intersects_rectangular(self, other: RectangularRoom) -> bool:
-  #  return (
-  #    self.x1 - 1 <= other.x2
-  #    and self.x2 + 1 >= other.x1
-  #    and self.y1 - 1 <= other.y2
-  #    and self.y2 + 1 >= other.y1
-  #  )
-    #
-  #def intersects_circular(self, other: CircularRoom) -> bool:
-  #  return (
-  #    self.x1 - 1 < other.x2 + 1
-  #    and self.x2 + 1 > other.x1 - 1
-  #    and self.y1 - 1 < other.y2 + 1
-  #    and self.y2 + 1 > other.y1 - 1
-  #  )
+#class CircularRoom(Room):
+#  def __init__(self, x: int, y: int, diameter: int):
+#    self.x1 = x
+#    self.y1 = y
+#    self.x2 = x + diameter
+#    self.y2 = y + diameter
+#  
+#  @property
+#  def center(self) -> Tuple[int, int]:
+#    center_x = int((self.x1 + self.x2) / 2)
+#    center_y = int((self.y1 + self.y2) / 2)
+#    return center_x, center_y
+#  
+#  @property
+#  def inner(self) -> List[Tuple[int, int]]:
+#    inner_tiles = []
+#    for x in range(self.x1 + 1, self.x2):
+#      for y in range(self.y1 + 1, self.y2):
+#        if (x, y) not in [(self.x1 + 1, self.y1 + 1), (self.x1 + 1, self.y2),
+#          (self.x2, self.y1 + 1), (self.x2, self.y2)]:
+#          inner_tiles.append((x, y))
+#    return inner_tiles
 
 def tunnel_between(
   start: Tuple[int, int], end: Tuple[int, int]
@@ -189,9 +153,9 @@ def place_entities(
     if isinstance(room, RectangularRoom):
       x = random.randint(room.x1 + 1, room.x2 - 1)
       y = random.randint(room.y1 + 1, room.y2 - 1)
-    elif isinstance(room, CircularRoom):
-      available_tiles = room.inner
-      x, y = random.choice(available_tiles)
+    #elif isinstance(room, CircularRoom):
+    #  available_tiles = room.inner
+    #  x, y = random.choice(available_tiles)
     
     if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
       entity.spawn(dungeon, x, y)
@@ -279,24 +243,21 @@ def generate_dungeon(
       room_width = random.randint(room_min_size, int(room_max_size * 0.75))
       room_height = random.randint(room_min_size, int(room_max_size * 0.75))
 
-    x = random.randint(0, dungeon.width - room_width - 1)
-    y = random.randint(0, dungeon.height - room_height - 1)
+    x = random.randint(1, dungeon.width - room_width - 1)
+    y = random.randint(1, dungeon.height - room_height - 1)
     
-    distance_from_floor_20 = abs(current_floor - 20)
-    decay_factor = 0.06
-    
-    if random.random() <= 0.76 + min(decay_factor * distance_from_floor_20, 0.23):
-      new_room = RectangularRoom(x, y, room_width, room_height)
-    else:
-      diameter = int((min(room_width, room_height) / 2))
-      if diameter <= 2:
-        diameter = 3
-      new_room = CircularRoom(x, y, diameter)
+    #distance_from_floor_20 = abs(current_floor - 20)
+    #decay_factor = 0.06
+        #
+    #if random.random() <= 0.76 + min(decay_factor * distance_from_floor_20, 0.23):
+    new_room = RectangularRoom(x, y, room_width, room_height)
+    #else:
+    #  diameter = min(int((room_width + room_height) / 2), 6)
+    #  new_room = CircularRoom(x, y, diameter)
 
-    for other_room in rooms:
-      if new_room.intersects_other(other_room):
-        continue
-          
+    if any(new_room.intersects(other_room) for other_room in rooms):
+      continue
+
     dungeon.tiles[new_room.inner] = tile_types.floor
 
     if len(rooms) == 0:
