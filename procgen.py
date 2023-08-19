@@ -80,8 +80,8 @@ class CircularRoom(Room):
   @property
   def inner(self) -> List[Tuple[int, int]]:
     inner_tiles = []
-    for x in range(self.x1 +1, self.x2):
-      for y in range(self.y1 + 1, self.y2):
+    for x in range(self.x1, self.x2):
+      for y in range(self.y1, self.y2):
         if (x, y) not in [(self.x1, self.y1), (self.x1, self.y2 - 1),
           (self.x2 - 1, self.y1), (self.x2 - 1, self.y2 - 1),
           (self.x1 + (self.x2 - self.x1) // 2, self.y1),
