@@ -15,43 +15,34 @@ The tutorial is [here](https://rogueliketutorials.com/tutorials/tcod/v2/).
 - Generated floor storage (previously visited floors remain in memory and can be revisited).
 - Can ascend to new floors as well as descend.
 - Character level displayed in UI panel.
-- Probably some stuff I forgot.
+- Misses and Critical Hits:
+   - There is a low chance that any attack can either miss entirely or deal extra damage.
+- Damage is determined randomly in a predefined ranged for each monster's attack and for different weapons.
+- The player and monsters have a "power" stat that adds bonus damage.
+- Armor equipment and monsters have an "armor" stat that is used to mitigate damage.
+- Damage Types and Affinities:
+   - Monster attacks and weapons have damage types.
+   - Monsters have damage affinities, e.g., a monster may be weak to or immune to a certain kind of damage, resist or absorb certain other kinds of damage, etc.
+   - Armor can also provide damage affinities to the player.
 
 # Features In Progress
 
 ## Changes to Combat
 
-Currently, the game follows the tutorial's combat engine:
-   
-   - entities deal HP damage based on their power stat (with an inherent `base_power` augmented by a `power_bonus` from equipment);
-   - entities soak damage based on their defense stat (with an inherent `base_defense` augmented by a `defense_bonus` from equipment).
+Soon damage types will be changed so that a weapon, monster, or spell can have multiple damage types, such as a sword that has both "slashing" damage and "holy" damage, and the logic will be reworked such that, for instance, a monster resistant to "slashing" damage will not have this benefit against a "holy" damage attack from such a sword if the monster is vulnerable to "holy" damage.
 
-The combat redesign will achieve the following:
-   
-   - combat will involve a random roll to hit, and on a successful hit, damage will be randomized within a small range;
-   - entities will have an inherent `base_to_hit` stat, which the player can level up and which increases the likelihood of success on the random roll to hit;
-   - entities will have an inherent `base_power` stat (which the player *cannot* level up) that will influence the randomly rolled damage;
-   - entities will have an inherent `base_defense` stat, which the player can level up and which decreases the likelihood of an attack roll succeeding on them;
-   - entities will have an inherent `base_armor` stat (which the player *cannot* level up) that will reduce the damage taken from damage rolls.
+## Predetermined Rooms
 
-Equipment will function as follows:
-   
-   - armor will provide an `armor_bonus` to soak damage;
-   - weapons will each have a `damage_calculation` function for determining random damage;
-   - monsters will either have equipment themselves or have an inherent `damage_calculation` function for their attacks;
-   - either type of equipment may provide additional benefits, such as a `to_hit_bonus` or `defense_bonus`.
+The starting room will be a predetermined shape and location in the dungeon, and code that will handle drawing and displaying such non-generated rooms will be implemented.
 
 # TO-DO
 
 1. Give the game a title other than the default tutorial name.
 2. Change menu screen art.
 3. Incorporate release package publishing into workflow.
-4. Implement new monster types.
-5. Implement new room procgen functions (round rooms, etc.)?
-6. Implement combat changes:
-   - Random roll for to-hit.
-   - Randomized damage? Critical hits?
-   - Split `actor.fighter.defense` into an agility stat to avoid being hit (inherent to character, can be leveled up) and a defense stat (from armor, etc.) to absorb damage.
+4. Revamp monster, weapon, and spell damage types to be a list of damage types.
+5. Implement new monster types.
+6. Implement new room procgen functions (round rooms, etc.)?
 7. Implement non-scroll-based ranged combat (i.e., bows, etc.)?
    - Ammunition system?
 8. Add new equipment?
