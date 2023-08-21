@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Set, TYPE_CHECKING
+from typing import List, TYPE_CHECKING
 
 from components.base_component import BaseComponent
 from equipment_types import EquipmentType
@@ -19,10 +19,10 @@ class Equippable(BaseComponent):
     min_dam: int = 0,
     max_dam: int = 0,
     damage_type: str = "",
-    dam_resist: Set = set(),
-    dam_immune: Set = set(),
-    dam_absorb: Set = set(),
-    dam_vulnerable: Set = set()
+    dam_resist: List[str] = [""],
+    dam_immune: List[str] = [""],
+    dam_absorb: List[str] = [""],
+    dam_vulnerable: List[str] = [""]
   ):
     self.equipment_type = equipment_type
     self.armor_bonus = armor_bonus
@@ -48,13 +48,13 @@ class Sword(Equippable):
     super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=power_bonus, min_dam=2, max_dam=7, damage_type=damage_type)
 
 class PaddedArmor(Equippable):
-  def __init__(self, armor_bonus: int = 1, dam_resist: Set = set(), dam_immune: Set = set(), dam_absorb: Set = set(), dam_vulnerable: Set = set()) -> None:
-    super().__init__(equipment_type=EquipmentType.ARMOR, armor_bonus=armor_bonus, dam_resist=dam_resist.update(["bludgeoning"]), dam_immune=dam_immune, dam_absorb=dam_absorb, dam_vulnerable=dam_vulnerable)
+  def __init__(self, armor_bonus: int = 1, dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = [""], dam_vulnerable: List[str] = [""]) -> None:
+    super().__init__(equipment_type=EquipmentType.ARMOR, armor_bonus=armor_bonus, dam_resist=dam_resist, dam_immune=dam_immune, dam_absorb=dam_absorb, dam_vulnerable=dam_vulnerable)
 
 class LeatherArmor(Equippable):
-  def __init__(self, armor_bonus: int = 2, dam_resist: Set = set(), dam_immune: Set = set(), dam_absorb: Set = set(), dam_vulnerable: Set = set()) -> None:
+  def __init__(self, armor_bonus: int = 2, dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = [""], dam_vulnerable: List[str] = [""]) -> None:
     super().__init__(equipment_type=EquipmentType.ARMOR, armor_bonus=armor_bonus, dam_resist=dam_resist, dam_immune=dam_immune, dam_absorb=dam_absorb, dam_vulnerable=dam_vulnerable)
     
 class ChainMail(Equippable):
-  def __init__(self, armor_bonus: int = 3, dam_resist: Set = set(), dam_immune: Set = set(), dam_absorb: Set = set(), dam_vulnerable: Set = set()) -> None:
-    super().__init__(equipment_type=EquipmentType.ARMOR, armor_bonus=armor_bonus, dam_resist=dam_resist.update(["slashing"]), dam_immune=dam_immune, dam_absorb=dam_absorb, dam_vulnerable=dam_vulnerable)
+  def __init__(self, armor_bonus: int = 3, dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = [""], dam_vulnerable: List[str] = [""]) -> None:
+    super().__init__(equipment_type=EquipmentType.ARMOR, armor_bonus=armor_bonus, dam_resist=dam_resist, dam_immune=dam_immune, dam_absorb=dam_absorb, dam_vulnerable=dam_vulnerable)

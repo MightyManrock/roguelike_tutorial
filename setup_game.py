@@ -57,11 +57,6 @@ def new_game() -> Engine:
   player.inventory.items.append(padded_armor)
   player.equipment.toggle_equip(padded_armor, add_message=False)
   
-  print(player.fighter.dam_resist)
-  print(player.fighter.dam_immune)
-  print(player.fighter.dam_vulnerable)
-  print(player.fighter.dam_absorb)
-  
   return engine
 
 def load_game(filename: str) -> Engine:

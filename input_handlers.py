@@ -311,30 +311,30 @@ class CharacterScreenEventHandler(AskUserEventHandler):
     if self.engine.player.fighter.dam_absorb:
       y_plus += 1
       absorb_string = ", ".join(self.engine.player.fighter.dam_absorb)
-      absorb_string = ". absorbs " + absorb_string
+      _absorb_string = ". absorbs " + absorb_string
       console.print(
-        x=x+1, y=y_plus, string=absorb_string
+        x=x+1, y=y_plus, string=_absorb_string
       )
     if self.engine.player.fighter.dam_immune:
       y_plus += 1
       immune_string = ", ".join(self.engine.player.fighter.dam_immune)
-      immune_string = ". immune to " + immune_string
+      _immune_string = ". immune to " + immune_string
       console.print(
-        x=x+1, y=y_plus, string=immune_string
+        x=x+1, y=y_plus, string=_immune_string
       )
     if self.engine.player.fighter.dam_vulnerable:
       y_plus += 1
       vulnerable_string = ", ".join(self.engine.player.fighter.dam_vulnerable)
-      vulnerable_string = ". weak to " + vulnerable_string
+      _vulnerable_string = ". weak to " + vulnerable_string
       console.print(
-        x=x+1, y=y_plus, string=vulnerable_string
+        x=x+1, y=y_plus, string=_vulnerable_string
       )
     if self.engine.player.fighter.dam_resist:
       y_plus += 1
       resist_string = ", ".join(self.engine.player.fighter.dam_resist)
-      resist_string = ". resists " + resist_string
+      _resist_string = ". resists " + resist_string
       console.print(
-        x=x+1, y=y_plus, string=resist_string
+        x=x+1, y=y_plus, string=_resist_string
       )
 
 class LevelUpEventHandler(AskUserEventHandler):

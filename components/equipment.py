@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Set, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from components.base_component import BaseComponent
 from equipment_types import EquipmentType
@@ -57,36 +57,31 @@ class Equipment(BaseComponent):
   def damage_type(self) -> str:
     if self.weapon is not None and self.weapon.equippable is not None:
       return self.weapon.equippable.damage_type
-    else:
-      return ""
+    return ""
   
   @property
-  def dam_resist(self) -> Set:
+  def dam_resist(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_resist
-    else:
-      return set()
+    return [""]
   
   @property
-  def dam_immune(self) -> Set:
+  def dam_immune(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_immune
-    else:
-      return set()
+    return [""]
   
   @property
-  def dam_absorb(self) -> Set:
+  def dam_absorb(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_absorb
-    else:
-      return set()
+    return [""]
   
   @property
-  def dam_vulnerable(self) -> Set:
+  def dam_vulnerable(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_vulnerable
-    else:
-      return set()
+    return [""]
     
   
   def item_is_equipped(self, item: Item) -> bool:

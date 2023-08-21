@@ -95,7 +95,7 @@ padded_armor = Item(
   char="[",
   color=(159, 89, 39),
   name="Padded Armor",
-  equippable=equippable.PaddedArmor()
+  equippable=equippable.PaddedArmor(dam_resist= ["bludgeoning"])
 )
 leather_armor = Item(
   char="[",
@@ -107,5 +107,5 @@ chainmail = Item(
   char="[",
   color=(142, 191, 255),
   name="Chainmail",
-  equippable=equippable.ChainMail()
+  equippable=equippable.ChainMail(dam_resist = ["slashing"])
 )
