@@ -17,7 +17,7 @@ The tutorial is [here](https://rogueliketutorials.com/tutorials/tcod/v2/).
 - Character level displayed in UI panel.
 - Misses and Critical Hits:
    - There is a low chance that any attack can either miss entirely or deal extra damage.
-- Damage is determined randomly in a predefined ranged for each monster's attack and for different weapons.
+- Damage is determined randomly in a predefined range for each monster's attack and for different weapons.
 - The player and monsters have a "power" stat that adds bonus damage.
 - Armor equipment and monsters have an "armor" stat that is used to mitigate damage.
 - Damage Types and Affinities:

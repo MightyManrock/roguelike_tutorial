@@ -3,6 +3,7 @@ from typing import List, TYPE_CHECKING
 import color
 from components.base_component import BaseComponent
 from render_order import RenderOrder
+from random import random
 
 if TYPE_CHECKING:
   from entity import Actor
@@ -17,7 +18,7 @@ class Fighter(BaseComponent):
   
   parent: Actor
   
-  def __init__(self, hp: int, base_power: int, base_armor: int, min_dam: int, max_dam: int, damage_type: str = "bludgeoning", dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = ["healing"], dam_vulnerable: List[str] = [""]):
+  def __init__(self, hp: int, base_power: int, base_armor: int, min_dam: int, max_dam: int, damage_type: List[str] = ["bludgeoning"], dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = ["healing"], dam_vulnerable: List[str] = [""]):
     self.max_hp = hp
     self._hp = hp
     self.base_power = base_power
@@ -77,15 +78,15 @@ class Fighter(BaseComponent):
       return 0
   
   @property
-  def damage_type(self) -> str:
-    if self.parent.equipment:
-      return self.parent.equipment.damage_type
-    else:
-      return self.base_damage_type
+  def damage_type(self) -> List[str]:
+    if self.parent.equipment is not None and self.parent.equipment.damage_type is not None:
+      stripped_dam_types = strip_dam_affinities(self.parent.equipment.damage_type)
+      return stripped_dam_types
+    return self.base_damage_type
   
   @property
   def dam_resist(self) -> List[str]:
-    if self.parent.equipment and self.parent.equipment.dam_resist:
+    if self.parent.equipment is not None and self.parent.equipment.dam_resist is not None:
       combined_resists = self.base_dam_resist.copy()
       combined_resists.extend(self.parent.equipment.dam_resist)
       stripped_combined_resists = strip_dam_affinities(combined_resists)
@@ -94,7 +95,7 @@ class Fighter(BaseComponent):
 
   @property
   def dam_immune(self) -> List[str]:
-    if self.parent.equipment and self.parent.equipment.dam_immune:
+    if self.parent.equipment is not None and self.parent.equipment.dam_immune is not None:
       combined_immunes = self.base_dam_immune.copy()
       combined_immunes.extend(self.parent.equipment.dam_immune)
       stripped_combined_immunes = strip_dam_affinities(combined_immunes)
@@ -103,7 +104,7 @@ class Fighter(BaseComponent):
   
   @property
   def dam_absorb(self) -> List[str]:
-    if self.parent.equipment and self.parent.equipment.dam_absorb:
+    if self.parent.equipment is not None and self.parent.equipment.dam_absorb is not None:
       combined_absorbs = self.base_dam_absorb.copy()
       combined_absorbs.extend(self.parent.equipment.dam_absorb)
       stripped_combined_absorbs = strip_dam_affinities(combined_absorbs)
@@ -112,7 +113,7 @@ class Fighter(BaseComponent):
 
   @property
   def dam_vulnerable(self) -> List[str]:
-    if self.parent.equipment and self.parent.equipment.dam_vulnerable:
+    if self.parent.equipment is not None and self.parent.equipment.dam_vulnerable is not None:
       combined_vulnerables = self.base_dam_vulnerable.copy()
       combined_vulnerables.extend(self.parent.equipment.dam_vulnerable)
       stripped_combined_vulnerables = strip_dam_affinities(combined_vulnerables)
@@ -134,29 +135,64 @@ class Fighter(BaseComponent):
     #  
   #  return amount_recovered
 
-  def take_damage(self, amount: int, damage_type: str = "") -> int:
+  def take_damage(self, amount: int, damage_types: List[str] = [""]) -> int:
     final_amount = amount
-    if self.dam_absorb and damage_type in self.dam_absorb:
+    will_absorb = False
+    is_immune = False
+    is_vulnerable = False
+    will_resist = False
+    for damage_type in damage_types:
+      if damage_type in self.dam_absorb:
+        print("Will absorb!")
+        will_absorb = True
+        break
+    if will_absorb:
       print("Damage absorbed!")
       if final_amount + self.hp > self.max_hp:
         final_amount = (self.max_hp - self.hp) * -1
       else:
         final_amount = final_amount * -1
-    elif self.dam_immune and damage_type in self.dam_immune:
-      print("Immune to damage!")
-      final_amount = 0
-    elif self.dam_vulnerable and damage_type in self.dam_vulnerable:
-      print("Damage triggered weakness!")
-      if final_amount == 0:
-        final_amount = 2
-      else:
-        final_amount = final_amount * 2
-    elif self.dam_resist and damage_type in self.dam_resist:
-      print("Damage resisted!")
-      if final_amount / 2 < 1:
+    else:
+      final_amount -= self.armor
+      if final_amount < 0:
+        final_amount = 0
+      for damage_type in damage_types:
+        if damage_type in self.dam_immune:
+          is_immune = True
+          break
+      if is_immune:
+        print("Immune to damage!")
         final_amount = 0
       else:
-        final_amount = int(final_amount / 2)
+        for damage_type in damage_types:
+          if damage_type in self.dam_vulnerable:
+            is_vulnerable = True
+            break
+        if is_vulnerable:
+          print("Damage triggered weakness!")
+          if final_amount == 0:
+            final_amount = 2
+          else:
+            final_amount = final_amount * 2
+        else:
+          for damage_type in damage_types:
+            if damage_type in self.dam_resist:
+              will_resist = True
+              break
+          if will_resist:
+            print("Damage resisted!")
+            if final_amount / 2 < 1:
+              final_amount = 0
+            else:
+              final_amount = int(final_amount / 2)
+    if final_amount == 0 and (not will_absorb or not will_resist or not is_immune) and random() >= 0.5:
+      final_amount = 1
+    if not will_absorb:
+      print(f"{self.parent.name} is taking {final_amount} damage!")
+    elif will_absorb and "healing" not in damage_types:
+      print(f"{self.parent.name} absorbs {final_amount * -1} damage!")
+    elif will_absorb and "healing" in damage_types:
+      print(f"{self.parent.name} heals {final_amount * -1} damage!")
     self.hp -= final_amount
     return final_amount
 

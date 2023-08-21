@@ -54,34 +54,34 @@ class Equipment(BaseComponent):
       return 3
       
   @property
-  def damage_type(self) -> str:
+  def damage_type(self) -> List[str]:
     if self.weapon is not None and self.weapon.equippable is not None:
       return self.weapon.equippable.damage_type
-    return ""
+    return None
   
   @property
   def dam_resist(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_resist
-    return [""]
+    return None
   
   @property
   def dam_immune(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_immune
-    return [""]
+    return None
   
   @property
   def dam_absorb(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_absorb
-    return [""]
+    return None
   
   @property
   def dam_vulnerable(self) -> List[str]:
     if self.armor is not None and self.armor.equippable is not None:
       return self.armor.equippable.dam_vulnerable
-    return [""]
+    return None
     
   
   def item_is_equipped(self, item: Item) -> bool:

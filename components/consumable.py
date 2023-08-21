@@ -67,7 +67,7 @@ class ConfusionConsumable(Consumable):
     self.consume()
 
 class HealingConsumable(Consumable):
-  def __init__(self, min_heal: int, max_heal: int, damage_type="healing"):
+  def __init__(self, min_heal: int, max_heal: int, damage_type: List[str] = ["healing"]):
     self.min_heal = min_heal
     self.max_heal = max_heal
     self.damage_type = damage_type
@@ -87,7 +87,7 @@ class HealingConsumable(Consumable):
       raise Impossible(f"Your health is already full.")
 
 class FireballDamageConsumable(Consumable):
-  def __init__(self, min_damage: int, max_damage: int, radius: int, damage_type: str = "fire"):
+  def __init__(self, min_damage: int, max_damage: int, radius: int, damage_type: List[str] = ["fire"]):
     self.min_damage = min_damage
     self.max_damage = max_damage
     self.radius = radius
@@ -124,7 +124,7 @@ class FireballDamageConsumable(Consumable):
     self.consume()
 
 class LightningDamageConsumable(Consumable):
-  def __init__(self, min_damage: int, max_damage: int, maximum_range: int, damage_type: str = "electric"):
+  def __init__(self, min_damage: int, max_damage: int, maximum_range: int, damage_type: List[str] = ["electric"]):
     self.min_damage = min_damage
     self.max_damage = max_damage
     self.maximum_range = maximum_range

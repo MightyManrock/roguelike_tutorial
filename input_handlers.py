@@ -294,8 +294,9 @@ class CharacterScreenEventHandler(AskUserEventHandler):
     )
     y_plus += 1
     if self.engine.player.fighter.damage_type:
+      damage_type_string = ", ".join(self.engine.player.fighter.damage_type)
       console.print(
-        x=x+1, y=y_plus, string=(" " * (15 - len(self.engine.player.fighter.damage_type))) + f"- {self.engine.player.fighter.damage_type}"
+        x=x+1, y=y_plus, string=f"- {damage_type_string}"
       )
       y_plus += 1
     if self.engine.player.fighter.base_armor >= 0:

@@ -18,7 +18,7 @@ class Equippable(BaseComponent):
     power_bonus: int = 0,
     min_dam: int = 0,
     max_dam: int = 0,
-    damage_type: str = "",
+    damage_type: List[str] = [""],
     dam_resist: List[str] = [""],
     dam_immune: List[str] = [""],
     dam_absorb: List[str] = [""],
@@ -36,15 +36,15 @@ class Equippable(BaseComponent):
     self.dam_vulnerable = dam_vulnerable
 
 class Club(Equippable):
-  def __init__(self, power_bonus: int = 0, damage_type: str = "bludgeoning") -> None:
+  def __init__(self, power_bonus: int = 0, damage_type: str = ["bludgeoning"]) -> None:
     super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=power_bonus, min_dam=1, max_dam=4, damage_type=damage_type)
 
 class Dagger(Equippable):
-  def __init__(self, power_bonus: int = 0, damage_type: str = "piercing") -> None:
+  def __init__(self, power_bonus: int = 0, damage_type: str = ["piercing"]) -> None:
     super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=power_bonus, min_dam=1, max_dam=5, damage_type=damage_type)
 
 class Sword(Equippable):
-  def __init__(self, power_bonus: int = 0, damage_type: str = "slashing") -> None:
+  def __init__(self, power_bonus: int = 0, damage_type: str = ["slashing"]) -> None:
     super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=power_bonus, min_dam=2, max_dam=7, damage_type=damage_type)
 
 class PaddedArmor(Equippable):

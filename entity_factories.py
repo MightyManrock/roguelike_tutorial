@@ -12,7 +12,7 @@ player = Actor(
   name="Player",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=30, base_power=0, base_armor=0, min_dam=1, max_dam=3, damage_type="bludgeoning"),
+  fighter=Fighter(hp=30, base_power=0, base_armor=0, min_dam=1, max_dam=3, damage_type=["bludgeoning"]),
   inventory=Inventory(capacity=26),
   level=Level(level_up_base=200)
 )
@@ -22,7 +22,7 @@ kobold = Actor(
   name="Kobold",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=6, base_power=0, base_armor=0, min_dam=1, max_dam=4, damage_type="piercing"),
+  fighter=Fighter(hp=6, base_power=0, base_armor=0, min_dam=1, max_dam=4, damage_type=["piercing"]),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=20)
 )
@@ -32,7 +32,7 @@ orc = Actor(
   name="Orc",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=10, base_power=1, base_armor=1, min_dam=2, max_dam=5, damage_type="slashing"),
+  fighter=Fighter(hp=10, base_power=1, base_armor=1, min_dam=2, max_dam=5, damage_type=["slashing"]),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=35)
 )
@@ -42,7 +42,7 @@ troll = Actor(
   name="Troll",
   ai_cls=HostileEnemy,
   equipment=Equipment(),
-  fighter=Fighter(hp=16, base_power=3, base_armor=2, min_dam=2, max_dam=6, damage_type="bludgeoning", dam_vulnerable=["fire", "acid"]),
+  fighter=Fighter(hp=16, base_power=3, base_armor=2, min_dam=2, max_dam=6, damage_type=["bludgeoning"], dam_vulnerable=["fire", "acid"]),
   inventory=Inventory(capacity=0),
   level=Level(xp_given=100)
 )

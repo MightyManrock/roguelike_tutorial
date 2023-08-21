@@ -156,31 +156,20 @@ class MeleeAction(ActionWithDirection):
         attack_desc, attack_color
       )
     else:
-      attack_desc = f"{self.entity.name.capitalize()} hits {target.name} "
+      attack_desc = f"{self.entity.name.capitalize()} hits {target.name}"
       if critical_hit:
         attack_desc += " critically"
       damage = droll.damage_roll(self.entity.fighter.power, self.entity.fighter.min_dam, self.entity.fighter.max_dam, critical_hit)
-      if self.entity.fighter.damage_type not in target.fighter.dam_absorb:
-        damage -= target.fighter.armor
-      if damage < 0:
-        damage = 0
-      if damage == 0 and random.random() >= 0.5:
-        damage = 1
-      if damage > 0:
-        final_damage = target.fighter.take_damage(damage, damage_type=self.entity.fighter.damage_type)
-        if final_damage > 0:
-          attack_desc += f" for {final_damage} hit points"
-          if critical_hit:
-            attack_desc += "!"
-          else:
-            attack_desc += "."
-          self.engine.message_log.add_message(
-            attack_desc, attack_color
-          )
+      final_damage = target.fighter.take_damage(damage, damage_types=self.entity.fighter.damage_type)
+      if final_damage > 0:
+        attack_desc += f' for {final_damage} {", ".join(self.entity.fighter.damage_type)} damage'
+        if critical_hit:
+          attack_desc += "!"
         else:
-          self.engine.message_log.add_message(
-            f"{attack_desc} but does no damage.", attack_color
-          )
+          attack_desc += "."
+        self.engine.message_log.add_message(
+          attack_desc, attack_color
+        )
       else:
         self.engine.message_log.add_message(
           f"{attack_desc} but does no damage.", attack_color
