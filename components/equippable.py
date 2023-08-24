@@ -16,6 +16,8 @@ class Equippable(BaseComponent):
     equipment_type: EquipmentType,
     armor_bonus: int = 0,
     power_bonus: int = 0,
+    crit_chance_bonus: int = 0,
+    miss_chance_bonus: int = 0,
     min_dam: int = 0,
     max_dam: int = 0,
     damage_type: List[str] = [""],
@@ -27,6 +29,8 @@ class Equippable(BaseComponent):
     self.equipment_type = equipment_type
     self.armor_bonus = armor_bonus
     self.power_bonus = power_bonus
+    self.crit_chance_bonus = crit_chance_bonus
+    self.miss_chance_bonus = miss_chance_bonus
     self.min_dam = min_dam
     self.max_dam = max_dam
     self.damage_type = damage_type
@@ -40,11 +44,11 @@ class Club(Equippable):
     super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=power_bonus, min_dam=1, max_dam=4, damage_type=damage_type)
 
 class Dagger(Equippable):
-  def __init__(self, power_bonus: int = 0, damage_type: str = ["piercing"]) -> None:
+  def __init__(self, power_bonus: int = 0, crit_chance_bonus: int = 1, damage_type: str = ["piercing"]) -> None:
     super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=power_bonus, min_dam=1, max_dam=5, damage_type=damage_type)
 
 class Sword(Equippable):
-  def __init__(self, power_bonus: int = 0, damage_type: str = ["slashing"]) -> None:
+  def __init__(self, power_bonus: int = 0, crit_chance_bonus: int = 1, damage_type: str = ["slashing"]) -> None:
     super().__init__(equipment_type=EquipmentType.WEAPON, power_bonus=power_bonus, min_dam=2, max_dam=7, damage_type=damage_type)
 
 class PaddedArmor(Equippable):

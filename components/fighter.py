@@ -65,15 +65,27 @@ class Fighter(BaseComponent):
   
   @property
   def crit_chance(self) -> int:
-    return self.base_crit_chance
-
-  # Equipment to provide bonus/penalty?
+    if self.base_crit_chance - self.crit_chance_bonus < 2:
+      return 2
+    return self.base_crit_chance - self.crit_chance_bonus
 
   @property
   def miss_chance(self) -> int:
-    return self.base_miss_chance
+    if self.base_miss_chance - self.miss_chance_bonus < 0:
+      return 0
+    return self.base_miss_chance - self.miss_chance_bonus
   
-  # Equipment to provide bonus/penalty?
+  @property
+  def crit_chance_bonus(self) -> int:
+    if self.parent.equipment is not None and self.parent.equipment.crit_chance_bonus:
+      return self.parent.equipment.crit_chance_bonus
+    return 0
+  
+  @property
+  def miss_chance_bonus(self) -> int:
+    if self.parent.equipment is not None and self.parent.equipment.miss_chance_bonus:
+      return self.parent.equipment.miss_chance_bonus
+    return 0
   
   @property
   def power_bonus(self) -> int:

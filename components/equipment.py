@@ -40,6 +40,30 @@ class Equipment(BaseComponent):
     return bonus
   
   @property
+  def crit_chance_bonus(self) -> int:
+    bonus = 0
+    
+    if self.weapon is not None and self.weapon.equippable is not None:
+      bonus += self.weapon.equippable.crit_chance_bonus
+    
+    if self.armor is not None and self.armor.equippable is not None:
+      bonus += self.weapon.equippable.crit_chance_bonus
+      
+    return bonus
+  
+  @property
+  def miss_chance_bonus(self) -> int:
+    bonus = 0
+    
+    if self.weapon is not None and self.weapon.equippable is not None:
+      bonus += self.weapon.equippable.miss_chance_bonus
+    
+    if self.armor is not None and self.armor.equippable is not None:
+      bonus += self.weapon.equippable.miss_chance_bonus
+      
+    return bonus
+  
+  @property
   def min_dam(self) -> int:
     if self.weapon is not None and self.weapon.equippable is not None:
       return self.weapon.equippable.min_dam
