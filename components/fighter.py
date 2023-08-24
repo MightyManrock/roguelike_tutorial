@@ -115,21 +115,6 @@ class Fighter(BaseComponent):
       stripped_combined_vulnerables = strip_dam_affinities(combined_vulnerables)
       return stripped_combined_vulnerables
     return self.base_dam_vulnerable
-  
-  #def heal(self, amount: int) -> int:
-  #  if self.hp == self.max_hp:
-  #    return 0
-    #  
-  #  new_hp_value = self.hp + amount
-    #  
-  #  if new_hp_value > self.max_hp:
-  #    new_hp_value = self.max_hp
-    #    
-  #  amount_recovered = new_hp_value - self.hp
-    #  
-  #  self.hp = new_hp_value
-    #  
-  #  return amount_recovered
 
   def take_damage(self, amount: int, damage_types: List[str] = [""]) -> int:
     final_amount = amount
@@ -153,23 +138,23 @@ class Fighter(BaseComponent):
       if final_amount < 0:
         final_amount = 0
       for damage_type in damage_types:
-        if damage_type in self.dam_immune:
-          is_immune = True
+        if damage_type in self.dam_vulnerable:
+          is_vulnerable = True
           break
-      if is_immune:
-        print("Immune to damage!")
-        final_amount = 0
+      if is_vulnerable:
+        print("Damage triggered weakness!")
+        if final_amount == 0:
+          final_amount = 2
+        else:
+          final_amount = final_amount * 2
       else:
         for damage_type in damage_types:
-          if damage_type in self.dam_vulnerable:
-            is_vulnerable = True
+          if damage_type in self.dam_immune:
+            is_immune = True
             break
-        if is_vulnerable:
-          print("Damage triggered weakness!")
-          if final_amount == 0:
-            final_amount = 2
-          else:
-            final_amount = final_amount * 2
+        if is_immune:
+          print("Immune to damage!")
+          final_amount = 0
         else:
           for damage_type in damage_types:
             if damage_type in self.dam_resist:
@@ -183,12 +168,12 @@ class Fighter(BaseComponent):
               final_amount = int(final_amount / 2)
     if final_amount == 0 and (not will_absorb or not will_resist or not is_immune) and random() >= 0.5:
       final_amount = 1
-    if not will_absorb:
-      print(f"{self.parent.name} is taking {final_amount} damage!")
-    elif will_absorb and "healing" not in damage_types:
-      print(f"{self.parent.name} absorbs {final_amount * -1} damage!")
-    elif will_absorb and "healing" in damage_types:
-      print(f"{self.parent.name} heals {final_amount * -1} damage!")
+    #if not will_absorb:
+    #  print(f"{self.parent.name} is taking {final_amount} damage!")
+    #elif will_absorb and "healing" not in damage_types:
+    #  print(f"{self.parent.name} absorbs {final_amount * -1} damage!")
+    #elif will_absorb and "healing" in damage_types:
+    #  print(f"{self.parent.name} heals {final_amount * -1} damage!")
     self.hp -= final_amount
     return final_amount
 
