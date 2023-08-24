@@ -148,7 +148,7 @@ class MeleeAction(ActionWithDirection):
     else:
       attack_color = color.enemy_atk
     
-    critical_hit, critical_miss = droll.crit_roll()
+    critical_hit, critical_miss = droll.crit_roll(self.entity.fighter.crit_chance, self.entity.fighter.miss_chance)
     
     if critical_miss:
       attack_desc = f"{self.entity.name.capitalize()} attacks {target.name} but misses!"

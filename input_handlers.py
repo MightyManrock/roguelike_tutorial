@@ -373,17 +373,53 @@ class LevelUpEventHandler(AskUserEventHandler):
       y=5,
       string=f"b) Power: +1 damage, from {self.engine.player.fighter.base_power}(+{self.engine.player.fighter.power_bonus})"
     )
+    if self.engine.player.fighter.base_crit_chance > 50:
+      console.print(
+        x=x+1,
+        y=6,
+        string=f"c) Prowess: +1% crit chance, from {100 - self.engine.player.fighter.base_crit_chance}%"
+      )
+    else:
+      console.print(
+        x=x+1,
+        y=6,
+        string=f"X) Cannot improve crit chance beyond {100 - self.engine.player.fighter.base_crit_chance}%"
+      )
+    if self.engine.player.fighter.base_miss_chance > 0:
+      console.print(
+        x=x+1,
+        y=7,
+        string=f"d) Fortune: -1% miss chance, from {self.engine.player.fighter.base_miss_chance}%"
+      )
+    else:
+      console.print(
+        x=x+1,
+        y=7,
+        string=f"X) Cannot improve miss chance lower than {self.engine.player.fighter.base_miss_chance}%"
+      )
 
   def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
     player = self.engine.player
     key = event.sym
     index = key - tcod.event.KeySym.a
     
-    if 0 <= index <= 1:
+    if 0 <= index <= 3:
       if index == 0:
         player.level.increase_max_hp()
-      else:
+      elif index == 1:
         player.level.increase_power()
+      elif index == 2:
+        if self.engine.player.fighter.base_crit_chance > 50:
+          player.level.increase_crit_chance()
+        else:
+          self.engine.message_log.add_message("Invalid entry.", color.invalid)
+          return None
+      else:
+        if self.engine.player.fighter.base_miss_chance > 0:
+          player.level.decrease_miss_chance()
+        else:
+          self.engine.message_log.add_message("Invalid entry.", color.invalid)
+          return None
     else:
       self.engine.message_log.add_message("Invalid entry.", color.invalid)
       return None

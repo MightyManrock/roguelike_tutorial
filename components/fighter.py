@@ -18,7 +18,7 @@ class Fighter(BaseComponent):
   
   parent: Actor
   
-  def __init__(self, hp: int, base_power: int, base_armor: int, min_dam: int, max_dam: int, damage_type: List[str] = ["bludgeoning"], dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = ["healing"], dam_vulnerable: List[str] = [""]):
+  def __init__(self, hp: int, base_power: int, base_armor: int, min_dam: int, max_dam: int, damage_type: List[str] = ["bludgeoning"], dam_resist: List[str] = [""], dam_immune: List[str] = [""], dam_absorb: List[str] = ["healing"], dam_vulnerable: List[str] = [""], base_crit_chance: int = 97, base_miss_chance: int = 5):
     self.max_hp = hp
     self._hp = hp
     self.base_power = base_power
@@ -30,6 +30,8 @@ class Fighter(BaseComponent):
     self.base_dam_immune = dam_immune
     self.base_dam_absorb = dam_absorb
     self.base_dam_vulnerable = dam_vulnerable
+    self.base_crit_chance = base_crit_chance
+    self.base_miss_chance = base_miss_chance
     
   @property
   def hp(self) -> int:
@@ -60,7 +62,19 @@ class Fighter(BaseComponent):
     if self.parent.equipment:
       return self.parent.equipment.max_dam
     return self.base_max_dam
-    
+  
+  @property
+  def crit_chance(self) -> int:
+    return self.base_crit_chance
+
+  # Equipment to provide bonus/penalty?
+
+  @property
+  def miss_chance(self) -> int:
+    return self.base_miss_chance
+  
+  # Equipment to provide bonus/penalty?
+  
   @property
   def power_bonus(self) -> int:
     if self.parent.equipment is not None and self.parent.equipment.power_bonus:

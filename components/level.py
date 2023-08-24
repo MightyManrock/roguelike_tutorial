@@ -68,3 +68,17 @@ class Level(BaseComponent):
     self.engine.message_log.add_message("You feel swifter!")
     
     self.increase_level()
+  
+  def increase_crit_chance(self, amount: int = -1) -> None:
+    self.parent.fighter.base_crit_chance += amount
+    
+    self.engine.message_log.add_message("You feel more adept!")
+    
+    self.increase_level()
+    
+  def decrease_miss_chance(self, amount: int = -1) -> None:
+    self.parent.fighter.base_miss_chance += amount
+    
+    self.engine.message_log.add_message("You feel more disciplined!")
+    
+    self.increase_level()
