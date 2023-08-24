@@ -57,19 +57,19 @@ fireball_scroll = Item(
   char="~",
   color=(255, 0, 0),
   name="Fireball Scroll",
-  consumable=consumable.FireballDamageConsumable(min_damage=8, max_damage=14, radius=3, damage_type="fire")
+  consumable=consumable.FireballDamageConsumable(min_damage=8, max_damage=14, radius=3, damage_type=["fire"])
 )
 health_potion = Item(
   char="!",
   color=(127, 0, 255),
   name="Health Potion",
-  consumable=consumable.HealingConsumable(min_heal=2, max_heal=6, damage_type="healing")
+  consumable=consumable.HealingConsumable(min_heal=2, max_heal=6, damage_type=["healing"])
 )
 lightning_scroll = Item(
   char="~",
   color=(255, 255, 0),
   name="Lightning Scroll",
-  consumable=consumable.LightningDamageConsumable(min_damage=12, max_damage=24, maximum_range=5, damage_type="electric")
+  consumable=consumable.LightningDamageConsumable(min_damage=12, max_damage=24, maximum_range=5, damage_type=["electric"])
 )
 
 club = Item(

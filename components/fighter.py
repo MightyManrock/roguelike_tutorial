@@ -53,40 +53,36 @@ class Fighter(BaseComponent):
   def min_dam(self) -> int:
     if self.parent.equipment:
       return self.parent.equipment.min_dam
-    else:
-      return self.base_min_dam
+    return self.base_min_dam
   
   @property
   def max_dam(self) -> int:
     if self.parent.equipment:
       return self.parent.equipment.max_dam
-    else:
-      return self.base_max_dam
+    return self.base_max_dam
     
   @property
   def power_bonus(self) -> int:
-    if self.parent.equipment:
+    if self.parent.equipment is not None and self.parent.equipment.power_bonus:
       return self.parent.equipment.power_bonus
-    else:
-      return 0
+    return 0
       
   @property
   def armor_bonus(self) -> int:
-    if self.parent.equipment:
+    if self.parent.equipment is not None and self.parent.equipment.armor_bonus:
       return self.parent.equipment.armor_bonus
-    else:
-      return 0
+    return 0
   
   @property
   def damage_type(self) -> List[str]:
-    if self.parent.equipment is not None and self.parent.equipment.damage_type is not None:
+    if self.parent.equipment is not None and self.parent.equipment.damage_type:
       stripped_dam_types = strip_dam_affinities(self.parent.equipment.damage_type)
       return stripped_dam_types
     return self.base_damage_type
   
   @property
   def dam_resist(self) -> List[str]:
-    if self.parent.equipment is not None and self.parent.equipment.dam_resist is not None:
+    if self.parent.equipment is not None and self.parent.equipment.dam_resist:
       combined_resists = self.base_dam_resist.copy()
       combined_resists.extend(self.parent.equipment.dam_resist)
       stripped_combined_resists = strip_dam_affinities(combined_resists)
@@ -95,7 +91,7 @@ class Fighter(BaseComponent):
 
   @property
   def dam_immune(self) -> List[str]:
-    if self.parent.equipment is not None and self.parent.equipment.dam_immune is not None:
+    if self.parent.equipment is not None and self.parent.equipment.dam_immune:
       combined_immunes = self.base_dam_immune.copy()
       combined_immunes.extend(self.parent.equipment.dam_immune)
       stripped_combined_immunes = strip_dam_affinities(combined_immunes)
@@ -104,7 +100,7 @@ class Fighter(BaseComponent):
   
   @property
   def dam_absorb(self) -> List[str]:
-    if self.parent.equipment is not None and self.parent.equipment.dam_absorb is not None:
+    if self.parent.equipment is not None and self.parent.equipment.dam_absorb:
       combined_absorbs = self.base_dam_absorb.copy()
       combined_absorbs.extend(self.parent.equipment.dam_absorb)
       stripped_combined_absorbs = strip_dam_affinities(combined_absorbs)
@@ -113,7 +109,7 @@ class Fighter(BaseComponent):
 
   @property
   def dam_vulnerable(self) -> List[str]:
-    if self.parent.equipment is not None and self.parent.equipment.dam_vulnerable is not None:
+    if self.parent.equipment is not None and self.parent.equipment.dam_vulnerable:
       combined_vulnerables = self.base_dam_vulnerable.copy()
       combined_vulnerables.extend(self.parent.equipment.dam_vulnerable)
       stripped_combined_vulnerables = strip_dam_affinities(combined_vulnerables)
