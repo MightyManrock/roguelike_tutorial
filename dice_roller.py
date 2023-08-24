@@ -6,7 +6,7 @@ def crit_roll(crit_chance: int = 97, miss_chance: int = 5):
   rand_roll = randint(1, 100)
   if rand_roll <= miss_chance:
     critical_miss = True
-  elif rand_roll >= crit_chance:
+  elif rand_roll > crit_chance:
     critical_hit = True
   #print(f"Roll: {rand_roll}")
   return critical_hit, critical_miss

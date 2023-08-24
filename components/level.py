@@ -69,7 +69,7 @@ class Level(BaseComponent):
     
     self.increase_level()
   
-  def increase_crit_chance(self, amount: int = -1) -> None:
+  def increase_crit_chance(self, amount: int = -2) -> None:
     self.parent.fighter.base_crit_chance += amount
     
     self.engine.message_log.add_message("You feel more adept!")

@@ -373,11 +373,11 @@ class LevelUpEventHandler(AskUserEventHandler):
       y=5,
       string=f"b) Power: +1 damage, from {self.engine.player.fighter.base_power}(+{self.engine.player.fighter.power_bonus})"
     )
-    if self.engine.player.fighter.base_crit_chance > 50:
+    if self.engine.player.fighter.base_crit_chance > 75:
       console.print(
         x=x+1,
         y=6,
-        string=f"c) Prowess: +1% crit chance, from {100 - self.engine.player.fighter.base_crit_chance}%"
+        string=f"c) Prowess: +2% crit chance, from {100 - self.engine.player.fighter.base_crit_chance}%"
       )
     else:
       console.print(
@@ -409,7 +409,7 @@ class LevelUpEventHandler(AskUserEventHandler):
       elif index == 1:
         player.level.increase_power()
       elif index == 2:
-        if self.engine.player.fighter.base_crit_chance > 50:
+        if self.engine.player.fighter.base_crit_chance > 75:
           player.level.increase_crit_chance()
         else:
           self.engine.message_log.add_message("Invalid entry.", color.invalid)
