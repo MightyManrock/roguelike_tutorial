@@ -262,7 +262,7 @@ class CharacterScreenEventHandler(AskUserEventHandler):
       x=x,
       y=y,
       width=width,
-      height=12,
+      height=13,
       title=self.TITLE,
       clear=True,
       fg=(255, 255, 255),
@@ -282,12 +282,17 @@ class CharacterScreenEventHandler(AskUserEventHandler):
       x=x+1, y=y_plus, string=f"HP: {self.engine.player.fighter._hp}/{self.engine.player.fighter.max_hp}"
     )
     y_plus += 1
-    if self.engine.player.fighter.base_power >= 0:
+    if self.engine.player.fighter.base_power == 0:
+      power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]"
+    elif self.engine.player.fighter.base_power > 0:
       power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]+{self.engine.player.fighter.base_power}"
     else:
       power_string = f"[{self.engine.player.fighter.min_dam}-{self.engine.player.fighter.max_dam}]{self.engine.player.fighter.base_power}"
-    if self.engine.player.fighter.power_bonus != 0:
+    if self.engine.player.fighter.power_bonus > 0:
       power_bonus_string = f"(+{self.engine.player.fighter.power_bonus})"
+      power_string += power_bonus_string
+    elif self.engine.player.fighter.power_bonus < 0:
+      power_bonus_string = f"({self.engine.player.fighter.power_bonus})"
       power_string += power_bonus_string
     console.print(
       x=x+1, y=y_plus, string="Power: " + power_string
@@ -299,6 +304,11 @@ class CharacterScreenEventHandler(AskUserEventHandler):
         x=x+1, y=y_plus, string=f"- {damage_type_string}"
       )
       y_plus += 1
+    crit_and_miss_string = f" Crit: {100 - self.engine.player.fighter.crit_chance}% | Miss: {self.engine.player.fighter.miss_chance}%"
+    console.print(
+      x=x+1, y=y_plus, string=crit_and_miss_string
+    )
+    y_plus += 1
     if self.engine.player.fighter.base_armor >= 0:
       armor_string = f"+{self.engine.player.fighter.base_armor}"
     else:
@@ -352,7 +362,7 @@ class LevelUpEventHandler(AskUserEventHandler):
     console.draw_frame(
       x=x,
       y=0,
-      width=37,
+      width=39,
       height=9,
       title=self.TITLE,
       clear=True,
@@ -571,7 +581,11 @@ class GameOverEventHandler(EventHandler):
     
 CURSOR_Y_KEYS = {
   tcod.event.KeySym.UP: -1,
+  tcod.event.KeySym.KP_8: -1,
+  tcod.event.KeySym.k: -1,
   tcod.event.KeySym.DOWN: 1,
+  tcod.event.KeySym.KP_2: 1,
+  tcod.event.KeySym.j: 1,
   tcod.event.KeySym.PAGEUP: -10,
   tcod.event.KeySym.PAGEDOWN: 10
 }
