@@ -104,7 +104,7 @@ def set_procgen_attributes():
   map_width = 80
   map_height = 43
   
-  room_max_size = 16
+  room_max_size = 18
   room_min_size = 4
   max_rooms = 30
   big_room_quotient = 6

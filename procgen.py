@@ -230,6 +230,8 @@ def place_entities(
       if x <= room.x1:
         x = room.x1 + 1
         y = (y + 1) % room.y2
+    while dungeon.tiles[x, y] == tile_types.dungeon_exit:
+      y -= 1
 
     if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
       entity.spawn(dungeon, x, y)
@@ -353,13 +355,16 @@ def generate_dungeon(
         if dungeon.tiles[x, y] == tile_types.wall:
           dungeon.tiles[x, y] = tile_types.floor
     
+    if len(rooms) == 0 and current_floor == 20:
+      column_chance = 1.0
+    else:
+      column_scaling_factor = min(new_room.width, new_room.height) / max(room_width, room_height)
+      column_chance = min(0.4 + (column_scaling_factor * 0.2), 0.9)
+    
     if new_room.inner_column_coords is not None:
       for x, y in new_room.inner_column_coords:
-        if len(rooms) == 0 and current_floor == 20:
-          dungeon.tiles[x, y] = tile_types.column    
-        else:
-          if random.random() <= 0.7:
-            dungeon.tiles[x, y] = tile_types.column
+        if random.random() <= column_chance:
+          dungeon.tiles[x, y] = tile_types.column
           
     place_entities(rooms, new_room, dungeon, big_room_quotient, small_room_quotient, current_floor)
 
