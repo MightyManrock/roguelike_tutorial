@@ -5,6 +5,7 @@ import color
 import exceptions
 import dice_roller as droll
 import random
+import tile_types
 
 if TYPE_CHECKING:
   from engine import Engine
@@ -179,6 +180,9 @@ class MovementAction(ActionWithDirection):
   def perform(self) -> None:
     dest_x, dest_y = self.dest_xy
     
+    if self.engine.game_map.tiles[dest_x, dest_y] == tile_types.dungeon_exit:
+      print("Exit dungeon code soon!")
+      raise exceptions.Impossible("You cannot leave the dungeon (yet)!")
     if not self.engine.game_map.in_bounds(dest_x, dest_y):
       raise exceptions.Impossible("That way is blocked.")
     if not self.engine.game_map.tiles["walkable"][dest_x, dest_y]:

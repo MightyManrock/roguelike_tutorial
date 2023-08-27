@@ -14,7 +14,6 @@ if TYPE_CHECKING:
   from engine import Engine
 
 class Room:
-  
   def intersects(self, other: Room) -> bool:
     return (
       self.x1 <= other.x2
@@ -23,10 +22,55 @@ class Room:
       and self.y2 >= other.y1
     )
 
+class FirstRoom(Room):
+  def __init__(self):
+    self.x1 = 32
+    self.y1 = 30
+    self.x2 = 48
+    self.y2 = 43
+    
+  @property
+  def center(self) -> Tuple[int, int]:
+    center_x = int((self.x1 + self.x2) / 2)
+    center_y = int((self.y1 + self.y2) / 2) - 4
+    return center_x, center_y
+  
+  @property
+  def inner(self) -> Tuple[slice, slice]:
+    return slice(self.x1 + 1, self.x2), slice(self.y1 +1, self.y2)
+  
+  @property
+  def dungeon_exit_tiles(self) -> List[Tuple[int, int]]:
+      exit_tiles = []
+      for x in range(self.x1 + 1, self.x2):
+          exit_tiles.append((x, self.y2 - 1))
+      return exit_tiles
+    
+  @property
+  def expand_inner(self) -> List[Tuple[int, int]]:
+    expanded_inner = []
+    for x in range(self.x1 + 1, self.x2):
+      for y in range(self.y1 + 1, self.y2):
+        expanded_inner.append((x, y))
+    return expanded_inner
+
+  @property
+  def inner_column_coords(self) -> List[Tuple[int, int]]:
+    return [
+      (36, 36),
+      (44, 36),
+      (36, 33),
+      (44, 33),
+      (36, 39),
+      (44, 39)
+    ]
+
 class RectangularRoom(Room):
   def __init__(self, x: int, y: int, width: int, height: int):
     self.x1 = x
     self.y1 = y
+    self.width = width
+    self.height = height
     self.x2 = x + width
     self.y2 = y + height
     
@@ -47,6 +91,27 @@ class RectangularRoom(Room):
       for y in range(self.y1 + 1, self.y2):
         expanded_inner.append((x, y))
     return expanded_inner
+  
+  @property
+  def inner_column_coords(self) -> List[Tuple[int, int]]:
+    if self.width <= 6 or self.height <= 6:
+      return []
+    
+    inner_width = (self.width // 2) - 1
+    inner_height = (self.height // 2) - 1
+    
+    if self.width > self.height:
+      inner_height -= 1 * ((self.width - self.height) // 2)
+    elif self.height > self.width:
+      inner_width -= 1 * ((self.height - self.width) // 2)
+    
+    corner_coords = [
+      (self.x1 + inner_width, self.y1 + inner_height),
+      (self.x1 + inner_width, self.y2 - inner_height),
+      (self.x2 - inner_width, self.y1 + inner_height),
+      (self.x2 - inner_width, self.y2 - inner_height)
+    ]
+    return corner_coords
 
 #class CircularRoom(Room):
 #  def __init__(self, x: int, y: int, diameter: int):
@@ -151,12 +216,21 @@ def place_entities(
 
   for entity in [x for x in (monsters + items) if x]:
     if isinstance(room, RectangularRoom):
-      x = random.randint(room.x1 + 1, room.x2 - 1)
+      x = random.randint(room.x1 + 1, room.x2)
+      y = random.randint(room.y1 + 1, room.y2)
+    elif isinstance(room, FirstRoom):
+      x = random.randint(room.x1 + 1, room.x2)
       y = random.randint(room.y1 + 1, room.y2 - 1)
     #elif isinstance(room, CircularRoom):
     #  available_tiles = room.inner
     #  x, y = random.choice(available_tiles)
-    
+
+    while dungeon.tiles[x, y] == tile_types.column:
+      x = (x + 1) % room.x2
+      if x <= room.x1:
+        x = room.x1 + 1
+        y = (y + 1) % room.y2
+
     if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
       entity.spawn(dungeon, x, y)
       print(f"{entity.name} spawned!")
@@ -183,18 +257,21 @@ def place_hallway_entities(
   
   room_areas = []
   for room in rooms:
-    if isinstance(room, RectangularRoom):
+    if isinstance(room, RectangularRoom) or isinstance(room, FirstRoom):
       room_areas.extend(room.expand_inner)
-    elif isinstance(room, CircularRoom):
-      room_areas.extend(room.inner)
+    #elif isinstance(room, CircularRoom):
+    #  room_areas.extend(room.inner)
 
   for entity in [x for x in (monsters + items) if x]:
     x = random.randint(2, dungeon.width - 2)
     y = random.randint(2, dungeon.height - 2)
     if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
-      if (x, y) not in room_areas and dungeon.tiles[x, y] != tile_types.wall:
+      if (x, y) not in room_areas and dungeon.tiles[x, y] != tile_types.wall and dungeon.tiles[x, y] != tile_types.column:
         entity.spawn(dungeon, x, y)
         print(f"{entity.name} spawned in hallway!")
+
+#def draw_first_room():
+#  pass
 
 def randomize_room_size(
   rooms: List[Room],
@@ -250,7 +327,10 @@ def generate_dungeon(
     #decay_factor = 0.06
         #
     #if random.random() <= 0.76 + min(decay_factor * distance_from_floor_20, 0.23):
-    new_room = RectangularRoom(x, y, room_width, room_height)
+    if current_floor == 20 and len(rooms) == 0:
+      new_room = FirstRoom()
+    else:
+      new_room = RectangularRoom(x, y, room_width, room_height)
     #else:
     #  diameter = min(int((room_width + room_height) / 2), 6)
     #  new_room = CircularRoom(x, y, diameter)
@@ -259,13 +339,28 @@ def generate_dungeon(
       continue
 
     dungeon.tiles[new_room.inner] = tile_types.floor
+    if current_floor == 20 and len(rooms) == 0:
+      for x, y in new_room.dungeon_exit_tiles:
+        dungeon.tiles[x, y] = tile_types.dungeon_exit
 
     if len(rooms) == 0:
-      player.place(*new_room.center, dungeon)
+      if current_floor == 20:
+        player.place(*(40, 41), dungeon)
+      else:
+        player.place(*new_room.center, dungeon)
     else:
       for x, y in tunnel_between(rooms[-1].center, new_room.center):
-        dungeon.tiles[x, y] = tile_types.floor
+        if dungeon.tiles[x, y] == tile_types.wall:
+          dungeon.tiles[x, y] = tile_types.floor
     
+    if new_room.inner_column_coords is not None:
+      for x, y in new_room.inner_column_coords:
+        if len(rooms) == 0 and current_floor == 20:
+          dungeon.tiles[x, y] = tile_types.column    
+        else:
+          if random.random() <= 0.7:
+            dungeon.tiles[x, y] = tile_types.column
+          
     place_entities(rooms, new_room, dungeon, big_room_quotient, small_room_quotient, current_floor)
 
     rooms.append(new_room)
@@ -293,7 +388,9 @@ def generate_dungeon(
     random_upstairs_room = rooms[random_room_index]
     dungeon.tiles[random_upstairs_room.center] = tile_types.up_stairs
     dungeon.upstairs_location = random_upstairs_room.center
+    print(f"Upstairs location set to {dungeon.upstairs_location}")
     dungeon.downstairs_location = final_room.center
+    print(f"Downstars location set to {dungeon.downstairs_location}")
     dungeon.tiles[final_room.center] = tile_types.down_stairs
 
   place_hallway_entities(rooms, dungeon, current_floor)
