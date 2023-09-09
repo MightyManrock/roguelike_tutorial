@@ -112,7 +112,7 @@ class FireballDamageConsumable(Consumable):
     targets_hit = False
     for actor in self.engine.game_map.actors:
       if actor.distance(*target_xy) <= self.radius:
-        rolled_damage = droll.damage_roll(0, min_damage, max_damage)
+        rolled_damage = droll.damage_roll(0, self.min_damage, self.max_damage)
         final_damage = actor.fighter.take_damage(rolled_damage, self.damage_type)
         self.engine.message_log.add_message(
           f"The {actor.name} is engulfed in a fiery explosion, taking {final_damage} damage!"
@@ -144,7 +144,7 @@ class LightningDamageConsumable(Consumable):
           closest_distance = distance
     
     if target:
-      rolled_damage = droll.damage_roll(0, min_damage, max_damage)
+      rolled_damage = droll.damage_roll(0, self.min_damage, self.max_damage)
       final_damage = target.fighter.take_damage(rolled_damage, self.damage_type)
       self.engine.message_log.add_message(
         f"A lightning bolt strikes the {target.name} with a loud thunder, for {final_damage} damage!"

@@ -367,6 +367,9 @@ def generate_dungeon(
           dungeon.tiles[x, y] = tile_types.column
           
     place_entities(rooms, new_room, dungeon, big_room_quotient, small_room_quotient, current_floor)
+    
+    if current_floor == 20 and len(rooms) == 0:
+      entity_factories.health_potion.spawn(dungeon, new_room.center[0], new_room.center[1])
 
     rooms.append(new_room)
 
