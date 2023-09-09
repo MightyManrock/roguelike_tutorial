@@ -10,6 +10,10 @@ Lib/
 Scripts/
 pyvenv.cfg
 
+#Dist
+dist/
+*.exe
+
 #Saved games
 saves/*.sav
 
