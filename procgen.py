@@ -101,7 +101,7 @@ class RectangularRoom(Room):
     inner_height = (self.height // 2) - 1
     
     if self.width > self.height:
-      inner_height -= 1 * ((self.width - self.height) // 2)
+      inner_height += 1 * ((self.width - self.height) // 2)
     elif self.height > self.width:
       inner_width -= 1 * ((self.height - self.width) // 2)
     
